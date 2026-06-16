@@ -1,1869 +1,1775 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📋 برنامج إدارة المشاريع والعمال</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🏗️ نظام ProTrack المتكامل لحساب الكميات والأسعار</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    body { 
-        font-family: 'Cairo', sans-serif;
-        direction: rtl; 
-        background: linear-gradient(135deg, #1f1f2e, #12121c);
-        color: #e0e0e0;
-        padding: 20px; 
-        min-height: 100vh;
-        transition: background 0.5s ease, color 0.5s ease;
-    }
-    
-    /* Light Mode */
-    body.light-mode {
-        background: #f0f0f0;
-        color: #111;
-    }
-    
-    body.light-mode .container {
-        background: #ffffff;
-        border: 1px solid #ccc;
-        color: #111;
-    }
-    
-    body.light-mode h1, body.light-mode h2, body.light-mode h3 {
-        color: #2193b0;
-        -webkit-text-fill-color: #2193b0;
-    }
-    
-    body.light-mode button {
-        background: linear-gradient(135deg, #00b09b, #96c93d);
-        color: #fff;
-    }
-    
-    body.light-mode input, body.light-mode textarea, body.light-mode select {
-        background-color: #fff;
-        color: #000;
-        border-color: #bbb;
-    }
-    
-    body.light-mode th {
-        background: #f8f9fa;
-        color: #333;
-    }
-    
-    body.light-mode td {
-        color: #333;
-    }
-    
-    /* Theme Toggle */
-    .theme-toggle {
-        background: none;
-        color: #e0e0e0;
-        font-size: 1.5rem;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border: none;
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-        transition: color 0.3s, background 0.3s;
-    }
-    
-    body.light-mode .theme-toggle {
-        color: #2c3e50;
-    }
-    
-    .container { 
-        max-width: 900px;
-        margin: auto; 
-        background: rgba(40, 44, 52, 0.95);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(6px);
-        padding: 40px 35px;
-        border-radius: 20px; 
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        animation: fadeInUp 0.6s ease-out;
-        margin-top: 80px;
-    }
-    
-    .container:hover {
-        transform: scale(1.005);
-        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    h1, h2, h3 { 
-        text-align: center;
-        color: #ffffff;
-        background: linear-gradient(to right, #6dd5ed, #2193b0);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
-    
-    h1 {
-        font-size: 36px;
-        margin-bottom: 25px;
-    }
-
-    /* Styles for Inputs */
-    input[type="text"], input[type="number"], input[type="email"], input[type="password"], 
-    input[type="file"], select, textarea { 
-        margin: 5px 0;
-        padding: 12px; 
-        width: 100%; 
-        border: 1px solid #444; 
-        border-radius: 10px; 
-        box-sizing: border-box;
-        background-color: #1d1f27;
-        color: #fff;
-        font-size: 1rem;
-    }
-    
-    input:focus, textarea:focus, select:focus {
-        border-color: #6dd5ed;
-        outline: none;
-    }
-
-    /* Styles for Buttons */
-    button { 
-        background: linear-gradient(135deg, #00b09b, #96c93d);
-        color: #fff;
-        cursor: pointer; 
-        font-weight: bold;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 16px rgba(0, 255, 180, 0.3);
-        margin: 5px 0;
-        padding: 12px;
-        width: 100%;
-        border: none;
-        border-radius: 10px;
-        box-sizing: border-box;
-        font-size: 1rem;
-    }
-    
-    button:hover {
-        background: linear-gradient(135deg, #00816a, #7db515);
-        box-shadow: 0 8px 22px rgba(0, 255, 180, 0.4);
-        transform: translateY(-1px);
-    }
-    
-    button.delete {
-        background: #e74c3c;
-        box-shadow: 0 5px 16px rgba(231, 76, 60, 0.3);
-    }
-    
-    button.delete:hover {
-        background: #c0392b;
-        box-shadow: 0 8px 22px rgba(231, 76, 60, 0.4);
-    }
-
-    /* New Button Styles */
-    button.back-btn {
-        background: linear-gradient(135deg, #8e44ad, #6c3483);
-        box-shadow: 0 5px 16px rgba(142, 68, 173, 0.3);
-    }
-    
-    button.back-btn:hover {
-        background: linear-gradient(135deg, #7d3c98, #5b2c6f);
-        box-shadow: 0 8px 22px rgba(142, 68, 173, 0.4);
-    }
-
-    button.share-btn {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        box-shadow: 0 5px 16px rgba(52, 152, 219, 0.3);
-    }
-    
-    button.share-btn:hover {
-        background: linear-gradient(135deg, #2980b9, #1f6394);
-        box-shadow: 0 8px 22px rgba(52, 152, 219, 0.4);
-    }
-
-    table { 
-        width: 100%; 
-        border-collapse: collapse;
-        margin-top: 15px; 
-    }
-    
-    th, td { 
-        border: 1px solid #444;
-        padding: 10px; 
-        text-align: center; 
-    }
-    
-    th { 
-        background: #1d1f27;
-        color: #e0e0e0;
-    }
-
-    .report { 
-        margin-top: 20px;
-        padding: 15px; 
-        background: rgba(40, 44, 52, 0.95); 
-        border: 1px solid rgba(255, 255, 255, 0.05); 
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    body.light-mode .report {
-        background: #f8f9fa;
-        color: #333;
-        border: 1px solid #ddd;
-    }
-
-    .worker-image { 
-        width: 50px;
-        height: 50px; 
-        border-radius: 50%; 
-        object-fit: cover; 
-        cursor: pointer; 
-    }
-    
-    .worker-details { 
-        display: flex;
-        align-items: center; 
-        justify-content: center; 
-    }
-    
-    .worker-details img { 
-        margin-left: 10px;
-    }
-
-    .action-buttons { 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center;
-        gap: 5px; 
-    }
-    
-    .inline-buttons { 
-        display: flex;
-        gap: 5px; 
-    }
-    
-    .inline-buttons button { 
-        width: auto;
-    }
-
-    /* Project Card Styles */
-    .project-card {
-        background: rgba(40, 44, 52, 0.95);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 15px;
-        padding: 20px;
-        margin: 15px 0;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    body.light-mode .project-card {
-        background: #ffffff;
-        border: 1px solid #ddd;
-        color: #333;
-    }
-
-    .project-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        border-color: #6dd5ed;
-    }
-
-    .project-card h3 {
-        margin: 0;
-        color: #6dd5ed;
-        font-size: 1.3rem;
-    }
-
-    .project-info {
-        margin-top: 10px;
-        font-size: 0.9rem;
-        opacity: 0.8;
-    }
-
-    /* New Project Input Section */
-    .add-project-section {
-        background: rgba(40, 44, 52, 0.95);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 15px;
-        padding: 20px;
-        margin: 20px 0;
-        display: none;
-    }
-
-    body.light-mode .add-project-section {
-        background: #ffffff;
-        border: 1px solid #ddd;
-    }
-
-    .add-project-section.show {
-        display: block;
-        animation: slideDown 0.3s ease;
-    }
-
-    /* Project Details Header */
-    .project-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .project-header h2 {
-        margin: 0;
-        flex: 1;
-    }
-
-    .project-header-buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .project-header-buttons button {
-        width: auto;
-        padding: 10px 20px;
-        margin: 0;
-        font-size: 0.9rem;
-    }
-
-    /* Modal styles */
-    .modal { 
-        display: none;
-        position: fixed; 
-        z-index: 1000; 
-        padding-top: 100px; 
-        left: 0; 
-        top: 0; 
-        width: 100%; 
-        height: 100%; 
-        overflow: auto; 
-        background-color: rgba(0,0,0,0.9);
-    }
-    
-    .modal-content { 
-        margin: auto;
-        display: block; 
-        width: 80%; 
-        max-width: 700px; 
-    }
-    
-    .modal-content, #caption { 
-        animation-name: zoom;
-        animation-duration: 0.6s; 
-    }
-    
-    .close { 
-        position: absolute;
-        top: 15px; 
-        right: 35px; 
-        color: #f1f1f1; 
-        font-size: 40px; 
-        font-weight: bold; 
-        transition: 0.3s;
-    }
-    
-    .close:hover, .close:focus { 
-        color: #bbb;
-        text-decoration: none; 
-        cursor: pointer; 
-    }
-
-    /* Share Modal */
-    .share-modal {
-        display: none;
-        position: fixed;
-        z-index: 1001;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.5);
-    }
-
-    .share-modal-content {
-        background-color: rgba(40, 44, 52, 0.95);
-        margin: 15% auto;
-        padding: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 15px;
-        width: 80%;
-        max-width: 500px;
-        text-align: center;
-        backdrop-filter: blur(6px);
-    }
-
-    body.light-mode .share-modal-content {
-        background-color: #ffffff;
-        border: 1px solid #ddd;
-        color: #333;
-    }
-
-    .share-link {
-        background: #1d1f27;
-        color: #6dd5ed;
-        padding: 15px;
-        border-radius: 10px;
-        margin: 20px 0;
-        word-break: break-all;
-        border: 1px solid #6dd5ed;
-        font-family: monospace;
-    }
-
-    body.light-mode .share-link {
-        background: #f8f9fa;
-        color: #2193b0;
-        border-color: #2193b0;
-    }
-    
-    @keyframes zoom { 
-        from { transform:scale(0) } 
-        to { transform:scale(1) } 
-    }
-    
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Auth Page Styles */
-    .auth-container {
-        background: rgba(40, 44, 52, 0.95);
-        backdrop-filter: blur(6px);
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-        color: #e0e0e0;
-        margin: 80px auto 0;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    body.light-mode .auth-container {
-        background: white;
-        color: #333;
-        border: 1px solid #ccc;
-    }
-    
-    .auth-container h1 {
-        color: #ffffff;
-        background: linear-gradient(to right, #6dd5ed, #2193b0);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 2rem;
-        font-size: 1.8rem;
-    }
-    
-    body.light-mode .auth-container h1 {
-        color: #333;
-        background: none;
-        -webkit-text-fill-color: #333;
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-        text-align: right;
-    }
-    
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        color: #e0e0e0;
-        font-weight: 500;
-    }
-    
-    body.light-mode .form-group label {
-        color: #555;
-    }
-    
-    .form-group input {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #444;
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: border-color 0.3s;
-        text-align: right;
-        background: #1d1f27;
-        color: #fff;
-    }
-    
-    body.light-mode .form-group input {
-        background: white;
-        color: #333;
-        border: 2px solid #ddd;
-    }
-    
-    .form-group input:focus {
-        outline: none;
-        border-color: #6dd5ed;
-        box-shadow: 0 0 0 3px rgba(109, 213, 237, 0.1);
-    }
-    
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 2rem;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #00b09b, #96c93d);
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 5px 16px rgba(0, 255, 180, 0.3);
-    }
-    
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #00816a, #7db515);
-        transform: translateY(-2px);
-    }
-    
-    .btn-secondary {
-        background: rgba(255, 255, 255, 0.1);
-        color: #e0e0e0;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        padding: 12px 20px;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    
-    body.light-mode .btn-secondary {
-        background: #f7f7f7;
-        color: #333;
-        border: 2px solid #ddd;
-    }
-    
-    .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-    }
-    
-    body.light-mode .btn-secondary:hover {
-        background: #e7e7e7;
-    }
-    
-    .success-message {
-        display: none;
-        background: #d4edda;
-        color: #155724;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-        border: 1px solid #c3e6cb;
-    }
-    
-    .error-message {
-        display: none;
-        background: #f8d7da;
-        color: #721c24;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-        border: 1px solid #f5c6cb;
-    }
-    
-    .form-toggle {
-        margin-top: 1rem;
-        color: #ccc;
-    }
-    
-    body.light-mode .form-toggle {
-        color: #666;
-    }
-    
-    .form-toggle a {
-        color: #6dd5ed;
-        text-decoration: none;
-        font-weight: 600;
-    }
-    
-    .form-toggle a:hover {
-        text-decoration: underline;
-    }
-    
-    .user-header {
-        background: rgba(40, 44, 52, 0.95);
-        color: #e0e0e0;
-        padding: 15px 20px;
-        border-radius: 15px;
-        margin-bottom: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    body.light-mode .user-header {
-        background: #ffffff;
-        color: #333;
-        border: 1px solid #ddd;
-    }
-    
-    .hidden {
-        display: none !important;
-    }
-
-    /* View-only styles */
-    .view-only .action-buttons,
-    .view-only button:not(.close):not([onclick*="openImage"]):not([onclick*="closeImage"]) {
-        display: none !important;
-    }
-
-    .view-only .project-header-buttons {
-        display: none !important;
-    }
-
-    .view-only input,
-    .view-only textarea,
-    .view-only select {
-        display: none !important;
-    }
-
-    .view-only h3:not([id*="report"]) {
-        display: none !important;
-    }
-
-    /* Developer Info Footer */
-    .developer-info {
-        margin-top: 40px;
-        text-align: center;
-        font-size: 0.9rem;
-        color: #888;
-        padding: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        width: 100%;
-    }
-    
-    body.light-mode .developer-info {
-        color: #555;
-        border-top: 1px solid #ccc;
-    }
-    
-    .developer-info a {
-        color: #6dd5ed;
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-    
-    .developer-info a:hover {
-        color: #2193b0;
-        text-decoration: underline;
-    }
-
-    /* Responsive Design */
-    @media(max-width: 600px) and (orientation: portrait) {
+    <style>
+        /* 🎨 التنسيقات العامة والمحسَّنة بنمط ProTrack */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root { 
+            --primary: #2c3e50; 
+            --accent: #2193b0; 
+            --success: #00b09b; 
+            --danger: #e74c3c; 
+            --info: #3498db; 
+            --warning: #f1c40f; 
+            --light: #1d1f27; 
+            --white: #282c34; 
+            --purple: #8e44ad;
+            --gradient-blue: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            --gradient-green: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        }
+        
+        /* ☀️ الوضع النهاري المحسن بالكامل (هو الأساسي الآن) */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f0f2f5;
+            color: #111;
+            margin: 0;
+            padding: 12px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            direction: rtl;
+            scroll-behavior: smooth;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
         .container {
+            background: #ffffff;
+            border: 1px solid #c8ced3;
             padding: 25px 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 850px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            margin-top: 60px;
+            box-sizing: border-box;
+        }
+        h1, h2, h3, h4 {
+            color: #1a73e8;
+            font-weight: bold;
+            margin-bottom: 12px;
+            margin-top: 15px;
+        }
+        h1 { font-size: 26px; margin-bottom: 8px; text-align: center; }
+        h2 { font-size: 1.25rem; margin-top: 0; }
+        h3 { font-size: 1.05rem; }
+
+        .control-panel, .calculator-content {
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            color: #202124;
+            padding: 20px;
             border-radius: 12px;
         }
-        
-        h1 {
-            font-size: 26px;
-        }
-        
-        .user-header {
-            flex-direction: column;
-            text-align: center;
-            gap: 10px;
-        }
-        
-        .theme-toggle {
-            top: 10px;
-            left: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .inline-buttons {
-            flex-direction: column;
-        }
-        
-        .inline-buttons button {
-            width: 100%;
-        }
-
-        .project-header {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .project-header-buttons {
-            justify-content: center;
-        }
-
-        input[type="text"], input[type="number"], input[type="email"], input[type="password"], 
-        input[type="file"], select, textarea {
-            padding: 8px 10px;
-            font-size: 0.8rem;
-        }
-        
-        button {
+        input, select {
+            background-color: #ffffff;
+            color: #202124;
+            border: 1px solid #bdc1c6;
             padding: 10px;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary, .btn-secondary {
-            padding: 10px 15px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .container {
-            padding: 15px 10px;
-            margin-top: 40px;
-        }
-
-        h1 {
-            font-size: 22px;
-        }
-
-        h2, h3 {
-            font-size: 18px;
-        }
-
-        input, select, textarea, button {
-            font-size: 0.9rem;
-            padding: 8px 10px;
-        }
-
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        th, td {
-            font-size: 0.85rem;
-            padding: 6px;
-        }
-
-        .inline-buttons {
-            flex-direction: column;
-        }
-
-        .inline-buttons button {
+            border-radius: 8px;
+            transition: 0.3s;
+            font-size: 13px;
+            box-sizing: border-box;
             width: 100%;
+            margin: 4px 0;
+            text-align: right;
         }
-    }
+        input:focus, select:focus { border-color: #1a73e8; outline: none; }
+        label { font-weight: bold; margin-bottom: 6px; font-size: 13px; color: #4a5568; text-align: right; }
 
-</style>
+        .accordion-item {
+            background: #ffffff;
+            border: none; 
+            border-radius: 14px; 
+            margin-bottom: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .accordion-header {
+            background: #ffffff;
+            color: #111111;
+            padding: 18px 24px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            display: flex; 
+            flex-direction: row-reverse; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            user-select: none; 
+            transition: all 0.3s ease; 
+            text-align: right;
+        }
+        .accordion-header:hover { background: #f8fafc; }
+        .accordion-header::before { 
+            content: "\f107"; 
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 16px; 
+            color: #aaaaaa; 
+            transition: 0.3s; 
+        }
+        .accordion-item.active .accordion-header::before { transform: rotate(180deg); color: #1a73e8; }
+        .accordion-item.active .accordion-header { background: #f8fafc; color: #1a73e8; }
+        .accordion-content { display: none; padding: 24px; background: #ffffff; border-top: 1px dashed #e8eaed; }
+        .accordion-item.active .accordion-content { display: block; }
+
+        .project-card { 
+            padding: 12px;
+            background: #ffffff;
+            border: 1px solid #c8ced3;
+            border-radius: 10px;
+            margin: 4px 0;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            font-size: 13px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+        }
+        .project-card:hover { background: #f8fafc; transform: translateY(-2px); border-color: #1a73e8; }
+        .project-card .proj-title { font-size: 15px; font-weight: bold; color: #202124; flex-grow: 1; text-align: right; }
+        .project-card .proj-actions { display: flex; gap: 6px; }
+
+        .result-area { margin-top: 20px; padding: 15px; background: #e0f2fe; color: #111; border: 1px solid #3498db; border-radius: 8px; line-height: 1.7; font-size: 14px; text-align: right; white-space: pre-wrap; }
+
+        /* 🌙 وضع الإضاءة الليلي المحسن المحفوظ كخيار بديل */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1f1f2e, #12121c);
+            color: #e0e0e0;
+        }
+        body.dark-mode .container {
+            background: rgba(40, 44, 52, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 {
+            color: #ffffff;
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body.dark-mode button {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: #fff;
+        }
+        body.dark-mode button.remove-btn, body.dark-mode button.btn-del {
+            background: #e74c3c !important;
+        }
+        body.dark-mode .control-panel, body.dark-mode .calculator-content {
+            background: #1d1f27;
+            border: 1px solid #444;
+            color: #e0e0e0;
+        }
+        body.dark-mode input, body.dark-mode select {
+            background-color: #1d1f27;
+            color: white;
+            border-color: #444;
+        }
+        body.dark-mode input:focus, body.dark-mode select:focus { border-color: #6dd5ed; }
+        body.dark-mode label { color: #6dd5ed; }
+        body.dark-mode .accordion-item, body.dark-mode .project-card { background: #282c34; border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.25); }
+        body.dark-mode .accordion-header { background: #282c34; color: #e0e0e0; }
+        body.dark-mode .accordion-header:hover { background: #343a40; }
+        body.dark-mode .accordion-item.active .accordion-header { background: rgba(33, 147, 176, 0.1); color: #6dd5ed; }
+        body.dark-mode .accordion-item.active .accordion-header::before { color: #2193b0; }
+        body.dark-mode .accordion-content { background: rgba(30, 34, 42, 0.6); border-top-color: rgba(255, 255, 255, 0.05); }
+        body.dark-mode .project-card .proj-title { color: #fff; }
+        body.dark-mode .project-card:hover { background: #343a40; }
+        body.dark-mode .result-area { background: rgba(33, 147, 176, 0.15); color: #fff; border: 1px solid #2193b0; }
+
+        button {
+            background: linear-gradient(135deg, #1a73e8, #34a853);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            margin-right: 4px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button:hover { transform: translateY(-1px); }
+
+        .btn-back-main { 
+            background: linear-gradient(135deg, #8e44ad, #9b59b6); 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.2);
+            margin: 0;
+        }
+        .btn-back-main:hover { background: linear-gradient(135deg, #6c3483, #8e44ad); }
+
+        .btn-save-item {
+            background: linear-gradient(135deg, #e67e22, #f39c12) !important;
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.2) !important;
+        }
+
+        .settings-toggle {
+            background: #ffffff;
+            color: #2c3e50;
+            border: 1px solid #ccc;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        body.dark-mode .settings-toggle { background: rgba(40, 44, 52, 0.9); color: #e0e0e0; border-color: rgba(255, 255, 255, 0.1); }
+
+        .search-container { position: relative; width: 100%; margin: 20px 0; }
+        .search-container input { padding: 12px 45px 12px 15px; border-radius: 10px; border: 1px solid #bdc1c6; font-size: 14px; width: 100%; box-sizing: border-box; background-color: #ffffff; color: #111; }
+        body.dark-mode .search-container input { background-color: #1d1f27; color: white; border-color: #444; }
+        .search-container::after { content: "🔍"; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+        
+        .project-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; width: 100%; }
+        .action-btn { padding: 5px 10px !important; font-size: 12px !important; border-radius: 5px !important; margin: 0 !important; box-shadow: none !important; width: auto; flex: none; }
+        .btn-edit { background: linear-gradient(135deg, #3498db, #2980b9) !important; color: white !important; }
+        .btn-del, .remove-btn { background: #d93025 !important; color: white !important; }
+
+        .btn-add-project-container { display: flex; justify-content: center; margin-top: 20px; }
+        .btn-add-project { background: linear-gradient(135deg, #00b09b, #96c93d); color: white; padding: 12px 35px; border-radius: 10px; font-weight: bold; font-size: 15px; width: auto; box-shadow: 0 4px 12px rgba(0, 255, 180, 0.3); }
+
+        #projects-dashboard-view { display: block; width: 100%; }
+        #single-project-view { display: none; width: 100%; }
+        .project-inner-header { border-bottom: 2px dashed #ccc; body.dark-mode & { border-bottom-color: #444; } margin-bottom: 25px; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+
+        .add-remove-btn { padding: 5px 12px; font-size: 14px; border-radius: 6px; margin: 0 5px; }
+        .download-button { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2); }
+
+        .radio-group { flex-direction: row; gap: 15px; flex-wrap: wrap; padding: 5px 0; }
+        .radio-group div { display: flex; align-items: center; gap: 6px; }
+        .radio-group input[type="radio"] { width: auto; margin: 0; }
+        .radio-group label { margin: 0; }
+
+        .component-selection { display: flex; gap: 15px; flex-wrap: wrap; margin: 10px 0 20px; background: rgba(0,0,0,0.03); body.dark-mode & { background: rgba(255,255,255,0.02); } padding: 10px; border-radius: 8px; border: 1px dashed #ccc; body.dark-mode & { border-dashed-color: #444; } }
+        .component-selection div { display: flex; align-items: center; gap: 6px; }
+        .component-selection input[type="checkbox"] { width: auto; cursor: pointer; }
+
+        .mix-ratio-container { margin: 15px 0; background: rgba(0,0,0,0.02); body.dark-mode & { background: rgba(255,255,255,0.03); } border: 1px dashed #ccc; body.dark-mode & { border-color: rgba(255, 255, 255, 0.1); } border-radius: 12px; padding: 15px; text-align: center; }
+        .mix-ratio-container label { display: block; font-weight: bold; margin-bottom: 10px; color: #1a73e8; body.dark-mode & { color: #00b09b; } font-size: 14px; text-align: center; }
+        .mix-inputs { display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .mix-inputs input { width: 70px; padding: 8px; text-align: center; }
+        .mix-inputs span { font-weight: bold; font-size: 18px; color: #1a73e8; body.dark-mode & { color: #6dd5ed; } }
+
+        .dynamic-fields-container { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); body.dark-mode & { background: rgba(0,0,0,0.15); } border-radius: 8px; }
+        .dynamic-field-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid rgba(0,0,0,0.05); body.dark-mode & { border-bottom-color: rgba(255,255,255,0.05); } padding-bottom: 8px; }
+        .dynamic-field-row label { margin: 0; color: #555; body.dark-mode & { color: #aaa; } }
+
+        .hint-text { font-size: 11px; color: #666; body.dark-mode & { color: #aaa; } margin-top: 2px; display: block; }
+
+        .section-header-input { margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
+
+        /* النافذة المنبثقة الفاخرة مالت إضافة/تعديل المشاريع والطباعة */
+        .protrack-modal { display: none; position: fixed; z-index: 10005; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background: #ffffff; border: 1px solid #c8ced3; padding: 25px; border-radius: 16px; width: 90%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: right; }
+        body.dark-mode .modal-content { background: #282c34; border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
+        .modal-header { margin-bottom: 15px; font-size: 18px; font-weight: bold; color: #1a73e8; body.dark-mode & { color: #6dd5ed; } }
+        .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
+        .modal-footer button { margin: 0; padding: 10px 20px; }
+        .btn-cancel { background: #d93025 !important; color: #fff; }
+        .btn-save { background: linear-gradient(135deg, #00b09b, #96c93d); color: white; }
+
+        /* خيارات نافذة الطباعة */
+        .print-choice-item { display: flex; align-items: center; gap: 10px; margin: 12px 0; padding: 8px; background: #f8fafc; body.dark-mode & { background: rgba(255,255,255,0.02); } border-radius: 8px; }
+        .print-choice-item input[type="checkbox"] { width: auto; cursor: pointer; }
+        .print-choice-item label { margin: 0; cursor: pointer; font-weight: normal; }
+
+        .toast { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #00b09b, #96c93d); color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 10000; font-weight: bold; }
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .container { padding: 15px 12px; margin-top: 45px; }
+            h1 { font-size: 20px; }
+            input, select, button { font-size: 12px; padding: 8px 10px; }
+        }
+
+        /* ستايل الطباعة الديناميكي حسب رغبة واختيار المستخدم */
+        @media print { 
+            .no-print, .accordion-item:not(.print-active) { display: none !important; } 
+            .container { box-shadow: none; border: none; padding: 0; width: 100%; max-width: 100%; margin: 0; }
+            .accordion-item.print-active { display: block !important; border: none; margin-bottom: 30px; box-shadow: none; background: transparent; }
+            .accordion-item.print-active .accordion-content { display: block !important; }
+            .calculator-content { background: transparent; border: 1px solid #ccc; color: black; }
+            body { background: white; color: black; }
+            .result-area { color: black; border-right-color: #333; background: #f0f0f0; }
+        }
+    </style>
 </head>
-
 <body>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<div id="darkModeToggle" class="theme-toggle">
+<div id="themeToggleBtn" class="settings-toggle" onclick="toggleTheme()" title="تبديل الوضع (ليلي / نهاري)">
     <i class="fas fa-adjust"></i>
 </div>
 
-<!-- Authentication Page -->
-<div class="auth-container" id="authPage">
-    <div style="font-size: 3rem; margin-bottom: 1rem; color: #6dd5ed;">📋</div>
-    <h1 id="form-title">تسجيل الدخول</h1>
-    
-    <div id="success-msg" class="success-message"></div>
-    <div id="error-msg" class="error-message"></div>
+<div id="toast" class="toast">تم تنفيذ العملية بنجاح</div>
 
-    <form id="auth-form">
-        <div class="form-group">
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" placeholder="Your-Name@gmail.com" required>
+<div id="projectModal" class="protrack-modal">
+    <div class="modal-content">
+        <div id="modalTitle" class="modal-header">إضافة مشروع جديد</div>
+        <div class="modal-body">
+            <div class="input-group">
+                <label id="modalLabel"><i class="fas fa-edit"></i> أدخل اسم مشروع حساب الكميات:</label>
+                <input type="text" id="modalProjectNameInput" placeholder="مثال: مشروع فيلا المنصور...">
+            </div>
         </div>
-
-        <div class="form-group">
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" placeholder="••••••••" required>
-            <a href="#" style="font-size: 0.9rem; color: #6dd5ed; text-decoration: underline; display: block; text-align: right; margin-top: 10px;" onclick="resetPassword(); return false;" id="forgot-password-link">هل نسيت كلمة المرور؟</a>
+        <div class="modal-footer">
+            <button class="btn-save" onclick="handleModalSubmit()">حفظ</button>
+            <button class="btn-cancel" onclick="closeProjectModal()">إلغاء</button>
         </div>
-
-        <div class="form-group hidden" id="confirm-password-group">
-            <label for="confirm-password">تأكيد كلمة المرور:</label>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••">
-        </div>
-
-        <div class="button-group">
-            <button type="button" id="login-btn" class="btn-primary">تسجيل دخول</button>
-            <button type="button" id="signup-btn" class="btn-primary hidden">إنشاء حساب</button>
-        </div>
-    </form>
-
-    <div class="form-toggle">
-        <p id="toggle-text">ليس لديك حساب؟ <a href="#" id="toggle-link">إنشاء حساب جديد</a></p>
     </div>
 </div>
 
-<!-- Main Application -->
-<div class="container hidden" id="mainPage">
-    <div class="user-header">
-        <div>
-            <h2 style="margin: 0;">مرحباً، <span id="user-display-name"></span>! 🙋‍♂️</h2>
-            <small id="user-display-email"></small>
-        </div>
-        <button id="logout-btn" class="btn-secondary" style="margin: 0; width: auto;">تسجيل الخروج</button>
-    </div>
-
-    <!-- Projects List View -->
-    <div id="projectsListView">
-        <h2>🏗️ إدارة المشاريع</h2>
-        
-        <div style="text-align: center; margin: 20px 0;">
-            <button id="showAddProjectBtn" onclick="toggleAddProject()">➕ إضافة مشروع جديد</button>
-        </div>
-
-        <!-- Add Project Section -->
-        <div class="add-project-section" id="addProjectSection">
-            <h3>إضافة مشروع جديد</h3>
-            <input type="text" id="newProjectName" placeholder="اسم المشروع الجديد">
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button onclick="addProject()" style="flex: 1;">إضافة</button>
-                <button onclick="toggleAddProject()" style="flex: 1; background: #666;">إلغاء</button>
+<div id="printSelectionModal" class="protrack-modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header"><i class="fas fa-print"></i> تحديد التبويبات لتصدير التقرير PDF</div>
+        <div class="modal-body" style="max-height: 350px; overflow-y: auto;">
+            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">اختر التبويبات التي تريد أن تظهر في تقرير الطباعة الرسمي:</p>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-1" value="acc-workers">
+                <label for="chk-print-1">👥 التبويب الأول: عدد العمال اليومي والإنتاجية</label>
+            </div>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-2" value="acc-earthworks" checked>
+                <label for="chk-print-2">🚜 التبويب الثاني: الأعمال الترابية (الحفر والردم)</label>
+            </div>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-3" value="acc-concrete-main" checked>
+                <label for="chk-print-3">🧱 التبويب الثالث: خرسانة الهيكل (الأسقف والأعمدة..)</label>
+            </div>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-4" value="acc-foundation" checked>
+                <label for="chk-print-4">📐 التبويب الرابع: خرسانة الأساس صبة النظافة</label>
+            </div>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-5" value="acc-tiles" checked>
+                <label for="chk-print-5">✨ التبويب الخامس: حساب الكاشي أو البورسلين</label>
+            </div>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-6" value="acc-bricks" checked>
+                <label for="chk-print-6">🧱 التبويب السادس: حساب الطابوق والأسمنت والرمل</label>
+            </div>
+            <div class="print-choice-item">
+                <input type="checkbox" id="chk-print-7" value="acc-plaster" checked>
+                <label for="chk-print-7">🧼 التبويب السابع: حساب إنهاءات الجدران والسقوف</label>
             </div>
         </div>
-
-        <div id="projectsList"></div>
+        <div class="modal-footer">
+            <button class="btn-save" onclick="executeSelectedPrint()"><i class="fas fa-print"></i> بدء التصدير/الطباعة</button>
+            <button class="btn-cancel" onclick="closePrintModal()">إلغاء</button>
+        </div>
     </div>
+</div>
 
-    <!-- Project Details View -->
-    <div id="projectDetailsView" class="hidden">
-        <div class="project-header">
-            <h2 id="currentProjectTitle">تفاصيل المشروع</h2>
-            <div class="project-header-buttons">
-                <button class="back-btn" onclick="goBackToProjects()">
-                    <i class="fas fa-arrow-right"></i> رجوع
-                </button>
-                <button class="share-btn" onclick="shareProject()">
-                    <i class="fas fa-share"></i> مشاركة
-                </button>
-                <button class="delete" onclick="deleteCurrentProject()">
-                    <i class="fas fa-trash"></i> حذف المشروع
-                </button>
-            </div>
+<div class="container">
+    
+    <div id="projects-dashboard-view">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-cubes" style="color: #1a73e8; body.dark-mode & { color: #6dd5ed; } margin-left: 8px;"></i> نظام ProTrack لإدارة وحساب كميات المشاريع</h1>
+            <small style="color: #666; body.dark-mode & { color: #aaa; } font-size: 13px; margin-top: 5px;">حساب الكلف والمواد والإنتاجية مع ميزة الحفظ التلقائي لكل مشروع</small>
         </div>
 
-        <div id="mainContent">
-            <hr style="margin: 30px 0; border: 1px solid rgba(255,255,255,0.1);">
-            <h3>➕ إضافة عامل</h3>
-            <input type="text" id="name" placeholder="اسم العامل">
-            <input type="number" id="phone" placeholder="رقم الهاتف">
-            <input type="number" id="wage" placeholder="الأجرة اليومية">
-            <label for="imageFile">صورة العامل:</label>
-            <input type="file" id="imageFile" accept="image/*">
-            <button onclick="addWorker()">إضافة</button>
+        <div class="search-container">
+            <input type="text" id="project-search" placeholder="🔍 بحث عن مشروع معين..." oninput="filterProjects()">
+        </div>
 
-            <h3>📊 كشف العمال</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>الأجرة اليومية</th>
-                        <th>عدد الأيام</th>
-                        <th>الراتب المستحق</th>
-                        <th>العمليات</th>
-                    </tr>
-                </thead>
-                <tbody id="workerTable"></tbody>
-            </table>
-     
-            <div style="margin-top: 20px;">
-                <h3>📝 تسجيل الحضور</h3>
-                <input type="text" id="attendanceWorkerName" placeholder="اسم العامل">
-                <div class="inline-buttons">
-                    <button onclick="markAttendanceByName('day')">إضافة يوم</button>
-                    <button onclick="markAttendanceByName('half')">إضافة نصف يوم</button>
+        <div class="project-list" id="project-list-container"></div>
+
+        <div class="btn-add-project-container no-print">
+            <button class="btn-add-project" onclick="createNewProject()"><i class="fas fa-plus"></i> إضافة مشروع حساب كميات جديد</button>
+        </div>
+    </div>
+
+    <div id="single-project-view">
+        <div class="project-inner-header">
+            <div>
+                <h2 id="active-project-title" style="margin:0; font-size: 20px;">اسم المشروع الحالي</h2>
+                <small style="color: #666; body.dark-mode & { color: #aaa; }">إدارة كافة الحسابات والجداول الفنية للمشروع المحدد</small>
+            </div>
+            <button class="btn-back-main no-print" onclick="backToDashboard()"><i class="fas fa-arrow-left"></i> رجوع للوحة المشاريع</button>
+        </div>
+
+        <div class="accordion-item" id="acc-workers">
+            <div class="accordion-header" onclick="toggleAccordion('acc-workers')">👥 التبويب الأول: عدد العمال اليومي والإنتاجية</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group">
+                        <label for="workType"><i class="fas fa-user-gear"></i> اختر نوع البناء:</label>
+                        <select id="workType">
+                            <option value="ألاعمال الترابية">ألاعمال الترابية</option>
+                            <option value="بناء الهيكل">بناء الهيكل</option>
+                            <option value="ارضيات">ارضيات</option>
+                            <option value="سيراميك">سيراميك</option>
+                            <option value="جص وابياض">جص وابياض</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateDailyWorkers()"><i class="fas fa-check"></i> احسب العمال والإنتاجية</button>
+                    <div class="result-area" id="dailyWorkersResult"></div>
                 </div>
             </div>
+        </div>
 
-            <div style="margin-top: 20px;">
-                <h3>💰 تسجيل دفع</h3>
-                <input type="text" id="payWorkerName" placeholder="اسم العامل">
-                <input type="number" id="payAmount" placeholder="المبلغ المراد دفعه">
-                <button onclick="payByWorkerName()">دفع</button>
-            </div>
-            
-            <div style="margin-top: 20px;">
-                <h3>🗓️ سجل المدفوعات</h3>
-                <input type="text" id="historyWorkerName" placeholder="اسم العامل لعرض سجل الدفعات">
-                <button onclick="showPaymentHistory()">عرض السجل</button>
-                <div id="paymentHistoryReport" style="margin-top:10px;"></div>
-            </div>
+        <div class="accordion-item" id="acc-earthworks">
+            <div class="accordion-header" onclick="toggleAccordion('acc-earthworks')">🚜 التبويب الثاني: الأعمال الترابية (الحفر والردم)</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group section-header-input">
+                        <label for="itemTitle-earthworks"><i class="fas fa-bookmark"></i> اسم الفقرة الحالية:</label>
+                        <input type="text" id="itemTitle-earthworks" placeholder="مثال: حفر أساسات السرداب الرئيسي...">
+                    </div>
 
-            <h3>📑 الجرد</h3>
-            <input type="text" id="reportWorkerName" placeholder="اسم العامل لعرض التقرير">
-            <button onclick="showReport()">عرض التقرير</button>
-            <button onclick="showAllReports()">عرض كل التقارير</button>
-            
-            <div id="report"></div>
+                    <div class="input-group radio-group">
+                        <label><i class="fas fa-layer-group"></i> اختر نوع الحساب الإنشائي:</label>
+                        <div>
+                            <input type="radio" id="calcTypeExcavation" name="calcType" value="excavation" onchange="toggleExcavationFillFields()">
+                            <label for="calcTypeExcavation">حساب الحفر فقط</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="calcTypeFill" name="calcType" value="fill" onchange="toggleExcavationFillFields()">
+                            <label for="calcTypeFill">حساب الردم فقط</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="calcTypeBoth" name="calcType" value="both" checked onchange="toggleExcavationFillFields()">
+                            <label for="calcTypeBoth">حساب الحفر والردم معاً</label>
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div id="excavation-inputs" class="input-subsection">
+                            <h3><i class="fas fa-gavel"></i> بيانات الحفر الكلية</h3>
+                            <div class="input-group">
+                                <label for="H1">منسوب الأرض المطلوبة (H1):</label>
+                                <input type="number" id="H1" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="H2">معدل مناسيب الأرض الطبيعية (H2) &gt; H1:</label>
+                                <input type="number" id="H2" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="A1">مساحة البناية (A1):</label>
+                                <input type="number" id="A1" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="V1">حجم السيارة (V1):</label>
+                                <input type="number" id="V1" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="P">سعر السيارة الواحدة (P):</label>
+                                <input type="number" id="P" step="any">
+                            </div>
+                        </div>
+
+                        <div id="fill-inputs" class="input-subsection">
+                            <h3><i class="fas fa-truck-ramp-box"></i> بيانات الردم (السبيس)</h3>
+                            <div class="input-group">
+                                <label for="A2">مساحة البناية + ممشى العمال (A2):</label>
+                                <input type="number" id="A2" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="H3">ارتفاع الردم (سم) (H3):</label>
+                                <input type="number" id="H3" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="V2">حجم السيارة (V2):</label>
+                                <input type="number" id="V2" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="P1">سعر السيارة الواحدة (P1):</label>
+                                <input type="number" id="P1" step="any">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="no-print">
+                        <button onclick="calculateExcavationFill()"><i class="fas fa-calculator"></i> احسب</button>
+                        <button class="btn-save-item" onclick="saveActiveItemResults('itemTitle-earthworks', 'excavationFillResult')"><i class="fas fa-floppy-disk"></i> حفظ النتائج</button>
+                        <button class="remove-btn" onclick="clearExcavationFill()"><i class="fas fa-trash"></i> مسح الحقول</button>
+                    </div>
+                    <div class="result-area" id="excavationFillResult"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" id="acc-concrete-main">
+            <div class="accordion-header" onclick="toggleAccordion('acc-concrete-main')">🧱 التبويب الثالث: خرسانة الهيكل (السقف - الجسر - الأعمدة - الدرج)</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group section-header-input">
+                        <label for="itemTitle-concrete"><i class="fas fa-bookmark"></i> اسم الفقرة الحالية:</label>
+                        <input type="text" id="itemTitle-concrete" placeholder="مثال: صبة أعمدة الطابق الأرضي...">
+                    </div>
+
+                    <div class="mix-ratio-container">
+                        <label><i class="fas fa-blender"></i> نسبة الخلط التصميمية (سمنت : رمل : حصى)</label>
+                        <div class="mix-inputs">
+                            <input type="number" id="cementRatio" placeholder="1" step="any" value="1">
+                            <span>:</span>
+                            <input type="number" id="sandRatio" placeholder="2" step="any" value="2">
+                            <span>:</span>
+                            <input type="number" id="gravelRatio" placeholder="4" step="any" value="4">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="concretePricePerM3">سعر المتر المكعب للخرسانة (د.ع):</label>
+                        <input type="number" id="concretePricePerM3" value="80000" step="any">
+                    </div>
+
+                    <div class="component-selection">
+                        <h3>اختر العناصر الموقعية للحساب:</h3>
+                        <div>
+                            <input type="checkbox" id="selectRoof" onchange="toggleConcreteFields()">
+                            <label for="selectRoof">سقف</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="selectBeam" onchange="toggleConcreteFields()">
+                            <label for="selectBeam">جسر</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="selectColumns" onchange="toggleConcreteFields()">
+                            <label for="selectColumns">أعمدة</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="selectStairs" onchange="toggleConcreteFields()">
+                            <label for="selectStairs">درج</label>
+                        </div>
+                    </div>
+
+                    <div id="concrete-fields-container" class="input-grid"></div>
+
+                    <div class="no-print">
+                        <button onclick="calculateConcreteC1C4()"><i class="fas fa-calculator"></i> احسب المواد</button>
+                        <button class="btn-save-item" onclick="saveActiveItemResults('itemTitle-concrete', 'concreteC1C4Result')"><i class="fas fa-floppy-disk"></i> حفظ النتائج</button>
+                        <button class="remove-btn" onclick="clearConcreteC1C4Inputs()"><i class="fas fa-trash"></i> مسح الحقول</button>
+                        <button onclick="downloadConcreteReport()" id="downloadConcreteReportBtn" class="download-button" style="display:none;"><i class="fas fa-file-arrow-down"></i> تنزيل التقرير الفني</button>
+                    </div>
+                    <div class="result-area" id="concreteC1C4Result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" id="acc-foundation">
+            <div class="accordion-header" onclick="toggleAccordion('acc-foundation')">📐 التبويب الرابع: خرسانة الأساس صبة النظافة</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group section-header-input">
+                        <label for="itemTitle-foundation"><i class="fas fa-bookmark"></i> اسم الفقرة الحالية:</label>
+                        <input type="text" id="itemTitle-foundation" placeholder="مثال: صبة نظافة الأساس الراف">
+                    </div>
+
+                    <div class="mix-ratio-container">
+                        <label><i class="fas fa-blender"></i> نسبة خلط الأساس (أسمنت : رمل : حصى)</label>
+                        <div class="mix-inputs">
+                            <input type="number" id="foundationCementRatio" placeholder="1" step="any" value="1">
+                            <span>:</span>
+                            <input type="number" id="foundationSandRatio" placeholder="3" step="any" value="3">
+                            <span>:</span>
+                            <input type="number" id="foundationGravelRatio" placeholder="6" step="any" value="6">
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="foundationY7">الارتفاع (م):</label>
+                            <input type="number" id="foundationY7" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="foundationX8">العرض (م):</label>
+                            <input type="number" id="foundationX8" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="foundationL8">الطول الكلي (م):</label>
+                            <input type="number" id="foundationL8" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="foundationPricePerM3">سعر المتر المكعب (د.ع):</label>
+                            <input type="number" id="foundationPricePerM3" value="80000" step="any">
+                        </div>
+                    </div>
+
+                    <div class="no-print">
+                        <button onclick="calculateFoundationC5()"><i class="fas fa-calculator"></i> احسب الكلفة</button>
+                        <button class="btn-save-item" onclick="saveActiveItemResults('itemTitle-foundation', 'foundationC5Result')"><i class="fas fa-floppy-disk"></i> حفظ النتائج</button>
+                        <button class="remove-btn" onclick="clearFoundationC5Inputs()"><i class="fas fa-trash"></i> مسح الحقول</button>
+                    </div>
+                    <div class="result-area" id="foundationC5Result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" id="acc-tiles">
+            <div class="accordion-header" onclick="toggleAccordion('acc-tiles')">✨ التبويب الخامس: حساب الكاشي أو البورسلين لإنهاء الأرضيات</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group section-header-input">
+                        <label for="itemTitle-tiles"><i class="fas fa-bookmark"></i> اسم الفقرة الحالية:</label>
+                        <input type="text" id="itemTitle-tiles" placeholder="مثال: بورسلين صالة الاستقبال...">
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="totalAreaTile">المساحة الكلية للأرضية (م²):</label>
+                            <input type="number" id="totalAreaTile" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="tileLength">طول البلاطة الواحدة (م):</label>
+                            <input type="number" id="tileLength" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="tileWidth">عرض البلاطة الواحدة (م):</label>
+                            <input type="number" id="tileWidth" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="tileType">نوع البلاط المعتمد:</label>
+                            <select id="tileType" onchange="updateTilePriceHint()">
+                                <option value="كاشي">كاشي عراقي</option>
+                                <option value="بورسلين">بورسلين</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="pricePerM2Tile">سعر المتر المربع الواصل (د.ع):</label>
+                        <input type="number" id="pricePerM2Tile" step="any">
+                        <span class="hint-text" id="tilePriceHint">السعر التقريبي: 8,000 د.ع/م²</span>
+                    </div>
+
+                    <div class="no-print">
+                        <button onclick="calculateTilePorcelain()"><i class="fas fa-calculator"></i> احسب العدد والكلفة</button>
+                        <button class="btn-save-item" onclick="saveActiveItemResults('itemTitle-tiles', 'tilePorcelainResult')"><i class="fas fa-floppy-disk"></i> حفظ النتائج</button>
+                        <button class="remove-btn" onclick="clearTilePorcelainInputs()"><i class="fas fa-trash"></i> مسح الحقول</button>
+                    </div>
+                    <div class="result-area" id="tilePorcelainResult"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" id="acc-bricks">
+            <div class="accordion-header" onclick="toggleAccordion('acc-bricks')">🧱 التبويب السادس: حساب الطابوق والأسمنت والرمل (جدار 24 سم)</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group section-header-input">
+                        <label for="itemTitle-bricks"><i class="fas fa-bookmark"></i> اسم الفقرة الحالية:</label>
+                        <input type="text" id="itemTitle-bricks" placeholder="مثال: بناء جدران الغرفة الخارجية...">
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="wallLengthWith">طول الحائط مع بتلو وجسر (م):</label>
+                            <input type="number" id="wallLengthWith" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="wallLengthWithout">طول الحائط بدون بتلو وجسر (م):</label>
+                            <input type="number" id="wallLengthWithout" step="any">
+                        </div>
+                        <div class="input-grid" style="grid-column: span 2; margin:0;">
+                            <div class="input-group">
+                                <label for="wallHeight">ارتفاع الحائط الكلي (م):</label>
+                                <input type="number" id="wallHeight" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="betloThickness">سمك البتلو (م):</label>
+                                <input type="number" id="betloThickness" value="0" step="any">
+                            </div>
+                            <div class="input-group">
+                                <label for="beamThickness">سمك الجسر الرابط (م):</label>
+                                <input type="number" id="beamThickness" value="0" step="any">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group dynamic-input-group">
+                            <label for="numWindows">عدد الشبابيك المراد طرحها:</label>
+                            <input type="number" id="numWindows" value="0" min="0" oninput="updateWindowDoorFields('window')">
+                            <div id="windowFieldsContainer" class="dynamic-fields-container"></div>
+                        </div>
+                        <div class="input-group dynamic-input-group">
+                            <label for="numDoors">عدد الأبواب المراد طرحها:</label>
+                            <input type="number" id="numDoors" value="0" min="0" oninput="updateWindowDoorFields('door')">
+                            <div id="doorFieldsContainer" class="dynamic-fields-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group radio-group">
+                        <label>نوع الطابوق المستخدم في البناء:</label>
+                        <div>
+                            <input type="radio" id="brickTypeNormal" name="brickType" value="عادي" checked onchange="updateBrickPrice()">
+                            <label for="brickTypeNormal">طابوق عادي</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="brickTypeRed" name="brickType" value="أحمر" onchange="updateBrickPrice()">
+                            <label for="brickTypeRed">طابوق أحمر</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bricksPrice4000">السعر لكل 4000 طابوقة (د.ع):</label>
+                        <input type="number" id="bricksPrice4000" step="any">
+                        <span class="hint-text">(يتم التحديث تلقائياً حسب النوع المحدد)</span>
+                    </div>
+
+                    <div class="no-print">
+                        <button onclick="calculateBricksCement()"><i class="fas fa-calculator"></i> احسب جدار البناء</button>
+                        <button class="btn-save-item" onclick="saveActiveItemResults('itemTitle-bricks', 'bricksCementResult')"><i class="fas fa-floppy-disk"></i> حفظ النتائج</button>
+                        <button class="remove-btn" onclick="clearBricksCementInputs()"><i class="fas fa-trash"></i> مسح الحقول</button>
+                    </div>
+                    <div class="result-area" id="bricksCementResult"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" id="acc-plaster">
+            <div class="accordion-header" onclick="toggleAccordion('acc-plaster')">🧼 التبويب السابع: حساب إنهاءات الجدران والسقوف (الجص / الأبيّض)</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group section-header-input">
+                        <label for="itemTitle-plaster"><i class="fas fa-bookmark"></i> اسم الفقرة الحالية:</label>
+                        <input type="text" id="itemTitle-plaster" placeholder="مثال: لبخ غرف النوم الطابق الثاني...">
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="roomLength">طول الغرفة الصافي (م):</label>
+                            <input type="number" id="roomLength" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="roomWidth">عرض الغرفة الصافي (م):</label>
+                            <input type="number" id="roomWidth" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="wallHeightPlaster">ارتفاع جدران الغرفة (م):</label>
+                            <input type="number" id="wallHeightPlaster" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="ceilingLength">طول السقف (م):</label>
+                            <input type="number" id="ceilingLength" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="ceilingWidth">عرض السقف (م):</label>
+                            <input type="number" id="ceilingWidth" step="any">
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group dynamic-input-group">
+                            <label>فتحات الشبابيك لطرحها من اللبخ:</label>
+                            <button type="button" class="add-remove-btn" onclick="addWindowEntryPlaster()">+</button>
+                            <div id="plasterWindowFields" class="dynamic-fields-container"></div>
+                        </div>
+                        <div class="input-group dynamic-input-group">
+                            <label>فتحات الأبواب لطرحها من اللبخ:</label>
+                            <button type="button" class="add-remove-btn" onclick="addDoorEntryPlaster()">+</button>
+                            <div id="plasterDoorFields" class="dynamic-fields-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group radio-group">
+                        <label>اختر مادة الإنهاء الحالية:</label>
+                        <div>
+                            <input type="radio" id="materialTypePlaster" name="materialType" value="plaster" checked onchange="togglePlasterWhiteThickness()">
+                            <label for="materialTypePlaster">مادة الجص</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="materialTypeWhite" name="materialType" value="white" onchange="togglePlasterWhiteThickness()">
+                            <label for="materialTypeWhite">مادة الأبيّض</label>
+                        </div>
+                    </div>
+
+                    <div class="input-grid" id="plasterThicknessGroup" style="margin:0; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <div class="input-group">
+                            <label for="plasterThickness">سماكة طبقة الجص (م):</label>
+                            <input type="number" id="plasterThickness" value="0.02" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="plasterCommercialBagWeight">وزن كيس الجص الواحد من المعمل (كغم):</label>
+                            <input type="number" id="plasterCommercialBagWeight" value="40" step="any">
+                        </div>
+                    </div>
+
+                    <div class="input-group" id="whiteThicknessGroup" style="display:none;">
+                        <label for="whiteThickness">سماكة طبقة الأبيّض (م):</label>
+                        <input type="number" id="whiteThickness" value="0.001" step="any">
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="plasterBagPrice">سعر كيس الجص (د.ع):</label>
+                            <input type="number" id="plasterBagPrice" value="3500" step="any">
+                        </div>
+                        <div class="input-group">
+                            <label for="whiteBagPrice">سعر كيس الأبيّض (د.ع):</label>
+                            <input type="number" id="whiteBagPrice" value="5000" step="any">
+                        </div>
+                    </div>
+
+                    <div class="no-print">
+                        <button onclick="calculatePlasterWhite()"><i class="fas fa-calculator"></i> احسب كلفة البياض</button>
+                        <button class="btn-save-item" onclick="saveActiveItemResults('itemTitle-plaster', 'plasterWhiteResult')"><i class="fas fa-floppy-disk"></i> حفظ النتائج</button>
+                        <button class="remove-btn" onclick="clearPlasterWhiteInputs()"><i class="fas fa-trash"></i> مسح الحقول</button>
+                    </div>
+                    <div class="result-area" id="plasterWhiteResult"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item" id="acc-saved-items">
+            <div class="accordion-header" onclick="toggleAccordion('acc-saved-items')">📂 التبويب الثامن: العناصر والفقرات المحفوظة للمشروع</div>
+            <div class="accordion-content">
+                <div class="calculator-content">
+                    <div class="input-group">
+                        <label for="savedItemsDropdown"><i class="fas fa-list-check"></i> اختر الفقرة المستدعاة لعرض نتائجها الحسابية:</label>
+                        <select id="savedItemsDropdown" onchange="loadSavedItemResultToView()">
+                            <option value="">-- لا توجد فقرات محفوظة حالياً --</option>
+                        </select>
+                    </div>
+                    <div class="no-print" style="margin-top:10px;">
+                        <button class="remove-btn" onclick="deleteSelectedSavedItem()"><i class="fas fa-trash-can"></i> حذف الفقرة المحددة</button>
+                    </div>
+                    <div class="result-area" id="savedItemsResultDisplay" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions no-print" style="text-align: center; margin-top: 25px;">
+            <button onclick="openPrintModal()"><i class="fas fa-print"></i> طباعة وتصدير كشف الكميات والأسعار الكامل PDF</button>
         </div>
     </div>
-</div>
 
-<!-- Image Modal -->
-<div id="imageModal" class="modal">
-    <span class="close" onclick="closeImage()">&times;</span>
-    <img class="modal-content" id="modalImage">
-</div>
-
-<!-- Share Modal -->
-<div id="shareModal" class="share-modal">
-    <div class="share-modal-content">
-        <span class="close" onclick="closeShareModal()" style="position: absolute; top: 10px; right: 15px; font-size: 28px;">&times;</span>
-        <h3 style="margin-top: 0;">🔗 مشاركة المشروع</h3>
-        <p>يمكنك نسخ الرابط أدناه ومشاركته مع الآخرين لعرض تفاصيل المشروع:</p>
-        <div class="share-link" id="shareLink"></div>
-        <button onclick="copyShareLink()" class="share-btn" style="margin: 10px 0; width: auto;">
-            <i class="fas fa-copy"></i> نسخ الرابط
-        </button>
-        <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 15px;">
-            ملاحظة: المستخدمون الذين يفتحون هذا الرابط سيمكنهم فقط مشاهدة تفاصيل المشروع دون إمكانية التعديل.
-        </p>
-    </div>
-</div>
-
-<div class="developer-info">
-    <p>تطوير: المهندس كاظم قاسم</p>
-    <p>رقم الهاتف: <a href="tel:07746424814">07746424814</a></p>
 </div>
 
 <script>
-    // Firebase Configuration - قم بتحديث هذا بإعدادات مشروعك
-    const firebaseConfig = {
-        apiKey: "AIzaSyDye4DgqNvEwwWDYf1yjW5yfJc14p1LmiU",
-        authDomain: "your-project-10fbe.firebaseapp.com",
-        databaseURL: "https://your-project-10fbe-default-rtdb.firebaseio.com",
-        projectId: "your-project-10fbe",
-        storageBucket: "your-project-10fbe.firebasestorage.app",
-        messagingSenderId: "715972050011",
-        appId: "1:715972050011:web:d5a4507dcfc30fa779d37e",
-        measurementId: "G-D1FRL391R4"
+    // ⚙️ نظام إدارة المشاريع الموضعية الفنية والتخزين المحلي المتقدم بنمط كود الحديد
+    let qty_projects = JSON.parse(localStorage.getItem('protrack_qty_projects_v1')) || {
+        "مشروع افتراضي 1": {},
+        "مشروع افتراضي 2": {}
     };
+    let currentProjectName = "";
+    let modalMode = "create";
+    let oldProjectTargetName = "";
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const database = firebase.database();
-    
-    // Global Variables
-    let projects = [];
-    let currentProject = null;
-    let currentUser = null;
-    let isViewOnly = false;
-    
-    // UI Elements
-    const authPage = document.getElementById('authPage');
-    const mainPage = document.getElementById('mainPage');
-    const projectsListView = document.getElementById('projectsListView');
-    const projectDetailsView = document.getElementById('projectDetailsView');
-    const form = document.getElementById('auth-form');
-    const formTitle = document.getElementById('form-title');
-    const loginBtn = document.getElementById('login-btn');
-    const signupBtn = document.getElementById('signup-btn');
-    const toggleLink = document.getElementById('toggle-link');
-    const toggleText = document.getElementById('toggle-text');
-    const confirmPasswordGroup = document.getElementById('confirm-password-group');
-    const successMsg = document.getElementById('success-msg');
-    const errorMsg = document.getElementById('error-msg');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userDisplayName = document.getElementById('user-display-name');
-    const userDisplayEmail = document.getElementById('user-display-email');
-    const forgotPasswordLink = document.getElementById('forgot-password-link');
-    const mainContent = document.getElementById('mainContent');
-    
-    let isLoginMode = true;
+    function saveProjectsToStorage() {
+        localStorage.setItem('protrack_qty_projects_v1', JSON.stringify(qty_projects));
+    }
 
-    // التحقق من رابط المشاركة عند تحميل الصفحة
-    window.addEventListener('load', function() {
-        if (handleShareLink()) {
-            // إذا كان هناك رابط مشاركة، لا تطلب تسجيل دخول
-            return;
-        }
-    });
-
-    // Function to handle shared project links - محدثة للعمل بدون مصادقة
-    function handleShareLink() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sharedProjectId = urlParams.get('project');
-        const sharedUserId = urlParams.get('user');
+    function renderDashboard() {
+        const listContainer = document.getElementById('project-list-container');
+        const searchVal = document.getElementById('project-search').value.toLowerCase().trim();
+        listContainer.innerHTML = "";
         
-        if (sharedProjectId && sharedUserId) {
-            isViewOnly = true;
-            loadSharedProject(sharedUserId, sharedProjectId);
-            return true;
-        }
-        return false;
-    }
-    
-    // Check for user login state - مع دعم وضع المشاركة
-    auth.onAuthStateChanged(user => {
-        // لا تفعل شيء إذا كان في وضع المشاركة
-        if (isViewOnly) return;
-        
-        if (user) {
-            currentUser = user;
-            showMainApp();
-            loadProjects();
-        } else {
-            currentUser = null;
-            hideAllPages();
-            authPage.classList.remove('hidden');
-        }
-    });
-
-    // Navigation Functions
-    function showProjectsList() {
-        projectsListView.classList.remove('hidden');
-        projectDetailsView.classList.add('hidden');
-        currentProject = null;
-    }
-
-    function showProjectDetails() {
-        projectsListView.classList.add('hidden');
-        projectDetailsView.classList.remove('hidden');
-    }
-
-    function goBackToProjects() {
-        if (isViewOnly) {
-            window.close();
-            return;
-        }
-        showProjectsList();
-    }
-
-    function toggleAddProject() {
-        if (isViewOnly) return;
-        
-        const section = document.getElementById('addProjectSection');
-        const btn = document.getElementById('showAddProjectBtn');
-        
-        if (section.classList.contains('show')) {
-            section.classList.remove('show');
-            btn.innerHTML = '➕ إضافة مشروع جديد';
-            document.getElementById('newProjectName').value = '';
-        } else {
-            section.classList.add('show');
-            btn.innerHTML = '✖️ إلغاء';
-            document.getElementById('newProjectName').focus();
-        }
-    }
-
-    // Message functions
-    function showSuccess(message) {
-        if (successMsg) {
-            successMsg.textContent = message;
-            successMsg.style.display = 'block';
-        }
-        if (errorMsg) {
-            errorMsg.style.display = 'none';
-        }
-        setTimeout(() => {
-            if (successMsg) successMsg.style.display = 'none';
-        }, 3000);
-    }
-
-    function showError(message) {
-        if (errorMsg) {
-            errorMsg.textContent = message;
-            errorMsg.style.display = 'block';
-        }
-        if (successMsg) {
-            successMsg.style.display = 'none';
-        }
-        setTimeout(() => {
-            if (errorMsg) errorMsg.style.display = 'none';
-        }, 3000);
-    }
-    
-    // Auth functions
-    function toggleMode() {
-        if (isViewOnly) return;
-        
-        isLoginMode = !isLoginMode;
-        if (isLoginMode) {
-            formTitle.textContent = 'تسجيل الدخول';
-            loginBtn.classList.remove('hidden');
-            signupBtn.classList.add('hidden');
-            confirmPasswordGroup.classList.add('hidden');
-            if (forgotPasswordLink) forgotPasswordLink.style.display = 'block';
-            toggleText.innerHTML = 'ليس لديك حساب؟ <a href="#" id="toggle-link">إنشاء حساب جديد</a>';
-        } else {
-            formTitle.textContent = 'إنشاء حساب جديد';
-            signupBtn.classList.remove('hidden');
-            loginBtn.classList.add('hidden');
-            confirmPasswordGroup.classList.remove('hidden');
-            if (forgotPasswordLink) forgotPasswordLink.style.display = 'none';
-            toggleText.innerHTML = 'لديك حساب؟ <a href="#" id="toggle-link">تسجيل الدخول</a>';
-        }
-
-        const newToggleLink = document.getElementById('toggle-link');
-        if (newToggleLink) {
-            newToggleLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                toggleMode();
-            });
-        }
-    }
-
-    function login(email, password) {
-        if (isViewOnly) return;
-        
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                showSuccess('تم تسجيل الدخول بنجاح!');
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                showError('حدث خطأ أثناء تسجيل الدخول. تأكد من البريد الإلكتروني وكلمة المرور.');
-                console.error("Login error: ", errorMessage);
-            });
-    }
-
-    function signup(email, password, confirmPassword) {
-        if (isViewOnly) return;
-        
-        if (password !== confirmPassword) {
-            showError('كلمات المرور غير متطابقة');
-            return false;
-        }
-        if (password.length < 6) {
-            showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
-            return false;
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                database.ref('users/' + user.uid).set({
-                    email: email,
-                    name: email.split('@')[0]
-                }).then(() => {
-                    showSuccess('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول');
-                    setTimeout(() => {
-                        toggleMode();
-                        document.getElementById('email').value = email;
-                    }, 1000);
-                });
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                if (errorMessage.includes("email-already-in-use")) {
-                    showError('هذا البريد الإلكتروني مستخدم بالفعل');
-                } else {
-                    showError('حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.');
-                }
-                console.error("Signup error: ", errorMessage);
-            });
-    }
-
-    function hideAllPages() {
-        authPage.classList.add('hidden');
-        mainPage.classList.add('hidden');
-    }
-
-    function showMainApp() {
-        hideAllPages();
-        mainPage.classList.remove('hidden');
-        if (currentUser && userDisplayName && userDisplayEmail) {
-            userDisplayName.textContent = currentUser.displayName || currentUser.email.split('@')[0];
-            userDisplayEmail.textContent = currentUser.email;
-        }
-        if (!isViewOnly) {
-            showProjectsList();
-        }
-    }
-
-    function logout() {
-        if (isViewOnly) return;
-        
-        auth.signOut()
-            .then(() => {
-                showSuccess('تم تسجيل الخروج بنجاح!');
-            })
-            .catch((error) => {
-                showError('حدث خطأ أثناء تسجيل الخروج.');
-                console.error("Logout error: ", error);
-            });
-    }
-
-    function resetPassword() {
-        if (isViewOnly) return;
-        
-        const email = document.getElementById("email").value;
-        if (email) {
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    alert("تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.");
-                })
-                .catch((error) => {
-                    let errorMessage = "حدث خطأ. يرجى المحاولة مرة أخرى.";
-                    if (error.code === "auth/user-not-found") {
-                        errorMessage = "هذا البريد الإلكتروني غير مسجل.";
-                    } else if (error.code === "auth/invalid-email") {
-                        errorMessage = "صيغة البريد الإلكتروني غير صحيحة.";
-                    }
-                    alert(errorMessage);
-                    console.error("Password reset error:", error);
-                });
-        } else {
-            alert("يرجى إدخال بريدك الإلكتروني أولاً.");
-        }
-    }
-
-    // Load projects from Firebase
-    function loadProjects() {
-        if (!currentUser || isViewOnly) return;
-        const projectsRef = database.ref(`workmanProjects/${currentUser.uid}`);
-        
-        projectsRef.on('value', snapshot => {
-            const data = snapshot.val();
-            projects = [];
-            if (data) {
-                projects = Object.keys(data).map(key => ({
-                    id: key,
-                    ...data[key]
-                }));
-            }
-            updateProjectList();
-        });
-    }
-
-    // Load shared project - للعمل بدون مصادقة
-    function loadSharedProject(userId, projectId) {
-        const projectRef = database.ref(`workmanProjects/${userId}/${projectId}`);
-        
-        projectRef.once('value', snapshot => {
-            const data = snapshot.val();
-            if (data) {
-                currentProject = { id: projectId, ...data };
-                
-                // إظهار المشروع المشترك
-                hideAllPages();
-                mainPage.classList.remove('hidden');
-                mainPage.classList.add('view-only');
-                
-                // إخفاء header المستخدم وإظهار المشروع مباشرة
-                const userHeader = document.querySelector('.user-header');
-                if (userHeader) userHeader.style.display = 'none';
-                
-                projectsListView.classList.add('hidden');
-                projectDetailsView.classList.remove('hidden');
-                
-                // تحديث عنوان المشروع
-                document.getElementById('currentProjectTitle').textContent = `مشاهدة مشروع: ${currentProject.name}`;
-                
-                // إظهار التقارير فقط
-                showAllReports();
-            } else {
-                alert('المشروع المطلوب غير موجود أو تم حذفه.');
-            }
-        }).catch(error => {
-            console.error('Error loading shared project:', error);
-            alert('حدث خطأ في تحميل المشروع.');
-        });
-    }
-
-    // Save project data to Firebase
-    function saveProject(projectData) {
-        return new Promise((resolve, reject) => {
-            if (!currentUser || isViewOnly) {
-                showError("خطأ: لم يتم تسجيل الدخول.");
-                return reject("No user logged in.");
-            }
-            const projectsRef = database.ref(`workmanProjects/${currentUser.uid}`);
-            
-            if (projectData.id) {
-                const projectId = projectData.id;
-                const dataToSave = { ...projectData };
-                delete dataToSave.id;
-                projectsRef.child(projectId).set(dataToSave).then(() => {
-                    showSuccess("تم تحديث المشروع بنجاح!");
-                    resolve();
-                }).catch(error => {
-                    console.error("Error updating project: ", error);
-                    showError("حدث خطأ أثناء تحديث المشروع.");
-                    reject(error);
-                });
-            } else {
-                projectsRef.push(projectData).then(() => {
-                    showSuccess("تم إضافة المشروع بنجاح!");
-                    resolve();
-                }).catch(error => {
-                    console.error("Error adding new project: ", error);
-                    showError("حدث خطأ أثناء إضافة المشروع.");
-                    reject(error);
-                });
-            }
-        });
-    }
-
-    function formatNumber(num) {
-        return num.toLocaleString('ar-EG');
-    }
-
-    // Project Management Functions
-    function addProject() {
-        if (isViewOnly) return;
-        
-        let projectName = document.getElementById("newProjectName").value.trim();
-        if (projectName) {
-            const newProject = {
-                name: projectName, 
-                workers: []
-            };
-            saveProject(newProject).then(() => {
-                document.getElementById("newProjectName").value = "";
-                toggleAddProject(); // إخفاء نموذج الإضافة
-            });
-        } else {
-            alert("يرجى إدخال اسم المشروع.");
-        }
-    }
-
-    function updateProjectList() {
-        if (isViewOnly) return;
-        
-        const listDiv = document.getElementById("projectsList");
-        if (!listDiv) return;
-        
-        listDiv.innerHTML = "";
-
-        if (projects.length === 0) {
-            listDiv.innerHTML = "<p style='text-align: center; opacity: 0.7; margin: 40px 0;'>لا توجد مشاريع حالياً. اضغط على 'إضافة مشروع جديد' لإنشاء مشروعك الأول.</p>";
-            return;
-        }
-
-        projects.forEach(p => {
-            // حساب مجموع الرواتب المتبقية لكل مشروع
-            let totalRemaining = 0;
-            let workersCount = 0;
-            if (p.workers) {
-                workersCount = p.workers.length;
-                p.workers.forEach(w => {
-                    let totalDue = (w.days || 0) * (w.wage || 0);
-                    let totalPaid = (w.payments || []).reduce((sum, pay) => sum + pay.amount, 0);
-                    totalRemaining += (totalDue - totalPaid);
-                });
-            }
-
-            // إنشاء بطاقة المشروع
-            let card = document.createElement("div");
+        Object.keys(qty_projects).forEach(pName => {
+            if (searchVal !== "" && !pName.toLowerCase().includes(searchVal)) return;
+            const card = document.createElement('div');
             card.className = "project-card";
+            card.onclick = function(e) {
+                if(e.target.tagName.toLowerCase() === 'button' || e.target.parentElement.tagName.toLowerCase() === 'button' || e.target.tagName.toLowerCase() === 'i') return;
+                openProject(pName);
+            };
             card.innerHTML = `
-                <h3>${p.name}</h3>
-                <div class="project-info">
-                    <div><i class="fas fa-users"></i> عدد العمال: ${workersCount}</div>
-                    <div><i class="fas fa-money-bill-wave"></i> مجموع الرواتب المتبقية: ${formatNumber(totalRemaining)}</div>
+                <div class="proj-title"><i class="fas fa-folder-open" style="color:#2193b0; margin-left:8px;"></i> ${pName}</div>
+                <div class="proj-actions no-print">
+                    <button class="action-btn btn-edit" onclick="renameProject('${pName}')" title="تعديل الاسم"><i class="fas fa-pen"></i></button>
+                    <button class="action-btn btn-del" onclick="deleteProjectDirect('${pName}')" title="حذف المشروع"><i class="fas fa-trash"></i></button>
                 </div>
             `;
-
-            card.onclick = () => openProject(p.id);
-            listDiv.appendChild(card);
+            listContainer.appendChild(card);
         });
     }
 
-    // Open project details
-    function openProject(projectId) {
-        if (isViewOnly) return;
-        
-        currentProject = projects.find(p => p.id === projectId);
-        if (currentProject) {
-            document.getElementById('currentProjectTitle').textContent = `مشروع: ${currentProject.name}`;
-            showProjectDetails();
-            updateTable();
-        }
+    function filterProjects() { renderDashboard(); }
+
+    function createNewProject() {
+        modalMode = "create";
+        document.getElementById('modalTitle').innerText = "إضافة مشروع كميات جديد";
+        document.getElementById('modalProjectNameInput').value = "";
+        document.getElementById('projectModal').style.display = "flex";
     }
 
-    // Delete current project
-    function deleteCurrentProject() {
-        if (!currentProject || isViewOnly) {
-            alert("لا يوجد مشروع محدد لحذفه.");
-            return;
-        }
-
-        const projectName = currentProject.name;
-        if (confirm(`هل أنت متأكد من أنك تريد حذف المشروع "${projectName}"؟ هذا الإجراء لا يمكن التراجع عنه.`)) {
-            const projectRef = database.ref(`workmanProjects/${currentUser.uid}/${currentProject.id}`);
-            projectRef.remove().then(() => {
-                showSuccess(`تم حذف المشروع "${projectName}" بنجاح!`);
-                goBackToProjects();
-            }).catch(error => {
-                showError("حدث خطأ أثناء حذف المشروع.");
-                console.error("Error deleting project:", error);
-            });
-        }
+    function renameProject(oldName) {
+        modalMode = "rename";
+        oldProjectTargetName = oldName;
+        document.getElementById('modalTitle').innerText = "تعديل اسم المشروع";
+        document.getElementById('modalProjectNameInput').value = oldName;
+        document.getElementById('projectModal').style.display = "flex";
     }
 
-    // Share project - محدثة للعمل بدون مصادقة
-    function shareProject() {
-        if (!currentProject || isViewOnly) {
-            alert("لا يوجد مشروع محدد للمشاركة.");
-            return;
-        }
+    function closeProjectModal() { document.getElementById('projectModal').style.display = "none"; }
 
-        const shareUrl = `${window.location.origin}${window.location.pathname}?user=${currentUser.uid}&project=${currentProject.id}`;
-        document.getElementById('shareLink').textContent = shareUrl;
-        document.getElementById('shareModal').style.display = 'block';
-    }
-
-    function closeShareModal() {
-        document.getElementById('shareModal').style.display = 'none';
-    }
-
-    function copyShareLink() {
-        const shareLink = document.getElementById('shareLink');
-        const text = shareLink.textContent;
-        
-        // إنشاء عنصر textarea مؤقت
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        
-        // إظهار رسالة تأكيد
-        alert('تم نسخ الرابط! يمكنك الآن مشاركته مع الآخرين.');
-    }
-
-    function getWorkers() {
-        return currentProject ? currentProject.workers || [] : [];
-    }
-    
-    // Attendance Functions
-    function markAttendanceByName(type) {
-        if (isViewOnly) return;
-        
-        let nameToFind = document.getElementById("attendanceWorkerName").value.trim();
-        
-        if (!nameToFind) {
-            alert("يرجى إدخال اسم العامل.");
-            return;
-        }
-
-        if (!currentProject) {
-            alert("يرجى اختيار مشروع أولاً.");
-            return;
-        }
-
-        let workers = getWorkers();
-        let workerFound = false;
-        
-        workers.forEach(w => {
-            if (w.name === nameToFind) {
-                let today = new Date().toLocaleDateString("ar-EG");
-                let value = (type === "day") ? 1 : 0.5;
-                w.days = (w.days || 0) + value;
-                if (!w.attendance) w.attendance = [];
-                w.attendance.push({ date: today, value: value });
-                workerFound = true;
-            }
-        });
-        
-        if (workerFound) {
-            currentProject.workers = workers;
-            saveProject(currentProject).then(() => {
-                updateTable();
-                document.getElementById("attendanceWorkerName").value = "";
-            });
+    function handleModalSubmit() {
+        const name = document.getElementById('modalProjectNameInput').value.trim();
+        if (!name) return alert("الرجاء إدخال اسم مشروع صالح!");
+        if (modalMode === "create") {
+            if (!qty_projects[name]) { 
+                qty_projects[name] = {}; 
+                saveProjectsToStorage(); renderDashboard(); closeProjectModal(); 
+            } else { alert("هذا الاسم موجود مسبقاً!"); }
         } else {
-            alert("لم يتم العثور على عامل بهذا الاسم في هذا المشروع.");
+            if (name !== oldProjectTargetName) {
+                if (qty_projects[name]) return alert("هذا الاسم موجود مسبقاً!");
+                qty_projects[name] = qty_projects[oldProjectTargetName];
+                delete qty_projects[oldProjectTargetName];
+                saveProjectsToStorage(); renderDashboard(); closeProjectModal();
+            } else { closeProjectModal(); }
         }
     }
 
-    // Worker Management Functions
-    function addWorker() {
-        if (!currentProject || isViewOnly) {
-            alert("يرجى اختيار مشروع أولاً.");
-            return;
-        }
-
-        let name = document.getElementById("name").value.trim();
-        let phone = parseFloat(document.getElementById("phone").value);
-        let wage = parseFloat(document.getElementById("wage").value);
-        let imageFile = document.getElementById("imageFile").files[0];
-
-        if(name && phone && wage) {
-            if(imageFile) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    if (!currentProject.workers) currentProject.workers = [];
-                    currentProject.workers.push({
-                        name: name, 
-                        phone: phone, 
-                        wage: wage, 
-                        days: 0, 
-                        attendance: [], 
-                        payments: [], 
-                        image: e.target.result
-                    });
-                    saveProject(currentProject).then(() => {
-                        updateTable();
-                        resetInputs();
-                    });
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                if (!currentProject.workers) currentProject.workers = [];
-                currentProject.workers.push({
-                    name: name, 
-                    phone: phone, 
-                    wage: wage, 
-                    days: 0, 
-                    attendance: [], 
-                    payments: [], 
-                    image: 'https://via.placeholder.com/50'
-                });
-                saveProject(currentProject).then(() => {
-                    updateTable();
-                    resetInputs();
-                });
-            }
-        } else {
-            alert("يرجى إدخال اسم العامل، رقم الهاتف، والأجرة اليومية");
-        }
-    }
-    
-    function resetInputs() {
-        if (isViewOnly) return;
-        
-        document.getElementById("name").value = "";
-        document.getElementById("phone").value = "";
-        document.getElementById("wage").value = "";
-        document.getElementById("imageFile").value = "";
-    }
-
-    function payByWorkerName() {
-        if (isViewOnly) return;
-        
-        let nameToFind = document.getElementById("payWorkerName").value.trim();
-        let amountToPay = parseFloat(document.getElementById("payAmount").value);
-        let workers = getWorkers();
-        
-        if (!nameToFind || !amountToPay || isNaN(amountToPay) || amountToPay <= 0) {
-            alert("يرجى إدخال اسم العامل والمبلغ الصحيح.");
-            return;
-        }
-
-        if (!currentProject) {
-            alert("يرجى اختيار مشروع أولاً.");
-            return;
-        }
-
-        let workerFound = false;
-        workers.forEach(w => {
-            if (w.name === nameToFind) {
-                if (!w.payments) w.payments = [];
-                w.payments.push({
-                    amount: amountToPay,
-                    date: new Date().toLocaleString("ar-EG")
-                });
-                workerFound = true;
-            }
-        });
-        
-        if (workerFound) {
-            currentProject.workers = workers;
-            saveProject(currentProject).then(() => {
-                updateTable();
-                document.getElementById("payWorkerName").value = "";
-                document.getElementById("payAmount").value = "";
-            });
-        } else {
-            alert("لم يتم العثور على عامل بهذا الاسم في هذا المشروع.");
+    function deleteProjectDirect(name) {
+        if (confirm(`هل أنت متأكد من حذف مشروع "${name}" وكل بياناته المحسوبة؟`)) {
+            delete qty_projects[name]; saveProjectsToStorage(); renderDashboard();
         }
     }
 
-    function showPaymentHistory() {
-        let historyDiv = document.getElementById("paymentHistoryReport");
-        let nameToFind = document.getElementById("historyWorkerName").value.trim();
-        let workers = getWorkers();
+    function openProject(name) {
+        currentProjectName = name;
+        document.getElementById('projects-dashboard-view').style.display = 'none';
+        document.getElementById('single-project-view').style.display = 'block';
+        document.getElementById('active-project-title').innerHTML = `<i class="fas fa-folder-open" style="color:#2193b0;"></i> ` + name;
         
-        if (!historyDiv) return;
-        historyDiv.innerHTML = "";
+        const allItems = document.querySelectorAll('.accordion-item');
+        allItems.forEach(el => el.classList.remove('active'));
 
-        let worker = workers.find(w => w.name === nameToFind);
-        if (worker) {
-            if (worker.payments && worker.payments.length > 0) {
-                let reportHTML = `<h4>سجل دفعات العامل: ${worker.name}</h4><ul>`;
-                worker.payments.forEach(p => {
-                    reportHTML += `<li>مبلغ: ${formatNumber(p.amount)} | التاريخ: ${p.date}</li>`;
-                });
-                reportHTML += `</ul>`;
-                historyDiv.innerHTML = reportHTML;
-            } else {
-                historyDiv.innerHTML = `<p>لا توجد دفعات مسجلة لهذا العامل.</p>`;
-            }
-        } else {
-            historyDiv.innerHTML = `<p>لم يتم العثور على عامل بهذا الاسم.</p>`;
-        }
+        loadProjectData(name);
+        updateSavedItemsDropdown(); // تحديث منسدلة التبويب الثامن للمشروع المفتوح
     }
 
-    function deleteWorker(index) {
-        if (isViewOnly) return;
-        
-        let workers = getWorkers();
-        if (confirm("هل أنت متأكد من حذف هذا العامل؟")) {
-            workers.splice(index, 1);
-            currentProject.workers = workers;
-            saveProject(currentProject).then(() => {
-                updateTable();
-            });
-        }
+    function backToDashboard() {
+        saveProjectData(currentProjectName);
+        document.getElementById('single-project-view').style.display = 'none';
+        document.getElementById('projects-dashboard-view').style.display = 'block';
+        renderDashboard();
     }
 
-    function updateTable() {
-        let table = document.getElementById("workerTable");
-        let workers = getWorkers();
-        
-        if (!table) return;
-        table.innerHTML = "";
-        
-        workers.forEach((w, i) => {
-            let totalDue = (w.days || 0) * (w.wage || 0);
-            let totalPaid = (w.payments || []).reduce((sum, pay) => sum + pay.amount, 0);
-            let remaining = totalDue - totalPaid;
-            
-            let row = `<tr>
-                <td>${w.name}</td>
-                <td>${formatNumber(w.wage)}</td>
-                <td>${w.days || 0}</td>
-                <td>${formatNumber(totalDue)}</td>
-                <td class="action-buttons">
-                    ${!isViewOnly ? `<button onclick="deleteWorker(${i})" class="delete">حذف</button>` : ''}
-                </td>
-            </tr>`;
-            table.innerHTML += row;
-        });
-    }
-
-    function showReport() {
-        let reportDiv = document.getElementById("report");
-        let nameToFind = document.getElementById("reportWorkerName").value.trim();
-        let workers = getWorkers();
-        
-        if (!reportDiv) return;
-        reportDiv.innerHTML = "";
-        
-        if (nameToFind) {
-            let worker = workers.find(w => w.name === nameToFind);
-            if (worker) {
-                let totalDue = (worker.days || 0) * (worker.wage || 0);
-                let totalPaid = (worker.payments || []).reduce((sum, p) => sum + p.amount, 0);
-                let remaining = totalDue - totalPaid;
-                let attList = (worker.attendance || []).map(a => `${a.date} (${a.value} يوم)`).join("<br>");
-                let card = `<div class="report">
-                    <div class="worker-details">
-                        <img src="${worker.image || 'https://via.placeholder.com/50'}" alt="صورة العامل" class="worker-image" onclick="openImage('${worker.image || 'https://via.placeholder.com/700'}')">
-                        <b>${worker.name}</b>
-                    </div>
-                    <br>
-                    📞 ${worker.phone}<br>
-                    💰 أجرة يومية: ${formatNumber(worker.wage)}<br>
-                    📅 عدد الأيام: ${worker.days || 0}<br>
-                    🧾 الراتب المستحق: ${formatNumber(totalDue)}<br>
-                    💵 المدفوع: ${formatNumber(totalPaid)}<br>
-                    ⚖️ الراتب المتبقي: ${formatNumber(remaining)}<br>
-                    🗓️ تواريخ الحضور:<br> ${attList || "لا يوجد حضور مسجل"}
-                </div>`;
-                reportDiv.innerHTML = card;
-            } else {
-                reportDiv.innerHTML = `<p>لم يتم العثور على عامل بهذا الاسم في هذا المشروع.</p>`;
-            }
-        } else {
-            showAllReports();
-        }
-    }
-    
-    function showAllReports() {
-        let reportDiv = document.getElementById("report");
-        let workers = getWorkers();
-        
-        if (!reportDiv) return;
-        reportDiv.innerHTML = "";
-        
-        if (workers.length === 0) {
-            reportDiv.innerHTML = "<p style='text-align: center; opacity: 0.7;'>لا يوجد عمال في هذا المشروع.</p>";
-            return;
-        }
-
-        workers.forEach((w, i) => {
-            let totalDue = (w.days || 0) * (w.wage || 0);
-            let totalPaid = (w.payments || []).reduce((sum, p) => sum + p.amount, 0);
-            let remaining = totalDue - totalPaid;
-            let attList = (w.attendance || []).map(a => `${a.date} (${a.value} يوم)`).join("<br>");
-            
-            let card = `<div class="report">
-                <div class="worker-details">
-                    <img src="${w.image || 'https://via.placeholder.com/50'}" alt="صورة العامل" class="worker-image" onclick="openImage('${w.image || 'https://via.placeholder.com/700'}')">
-                    <b>${i+1} - ${w.name}</b>
-                </div>
-                <br>
-                📞 ${w.phone}<br>
-                💰 أجرة يومية: ${formatNumber(w.wage)}<br>
-                📅 عدد الأيام: ${w.days || 0}<br>
-                🧾 الراتب المستحق: ${formatNumber(totalDue)}<br>
-                💵 المدفوع: ${formatNumber(totalPaid)}<br>
-                ⚖️ الراتب المتبقي: ${formatNumber(remaining)}<br>
-                🗓️ تواريخ الحضور:<br> ${attList || "لا يوجد حضور مسجل"}
-            </div>`;
-            reportDiv.innerHTML += card;
-        });
-    }
-
-    // Modal functions
-    function openImage(imageSrc) {
-        let modal = document.getElementById("imageModal");
-        let modalImg = document.getElementById("modalImage");
-        if (modal && modalImg) {
-            modal.style.display = "block";
-            modalImg.src = imageSrc;
-        }
-    }
-
-    function closeImage() {
-        let modal = document.getElementById("imageModal");
-        if (modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Auth Event Listeners
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            if (!email || !password) {
-                showError('يرجى ملء جميع الحقول المطلوبة');
-                return;
-            }
-            login(email, password);
-        });
-    }
-
-    if (signupBtn) {
-        signupBtn.addEventListener('click', function() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            if (!email || !password) {
-                showError('يرجى ملء جميع الحقول المطلوبة');
-                return;
-            }
-            if (!isLoginMode && !confirmPassword) {
-                showError('يرجى تأكيد كلمة المرور');
-                return;
-            }
-            signup(email, password, confirmPassword);
-        });
-    }
-
-    if (toggleLink) {
-        toggleLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleMode();
-        });
-    }
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
-    }
-
-    if (form) {
-        form.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (isLoginMode) {
-                    loginBtn.click();
+    function saveProjectData(name) {
+        if (!name || !qty_projects[name]) return;
+        let data = {};
+        const inputs = document.querySelectorAll('#single-project-view input, #single-project-view select');
+        inputs.forEach(inp => {
+            if (inp.id && inp.id !== "savedItemsDropdown") {
+                if (inp.type === 'radio' || inp.type === 'checkbox') {
+                    data[inp.id] = inp.checked;
                 } else {
-                    signupBtn.click();
+                    data[inp.id] = inp.value;
                 }
             }
         });
+        
+        const textAreas = document.querySelectorAll('.result-area');
+        textAreas.forEach(area => { if(area.id && area.id !== "savedItemsResultDisplay") data[area.id] = area.innerText; });
+
+        qty_projects[name].savedInputs = data;
+        saveProjectsToStorage();
     }
 
-    // Close modals when clicking outside
-    window.onclick = function(event) {
-        const imageModal = document.getElementById('imageModal');
-        const shareModal = document.getElementById('shareModal');
-        
-        if (event.target == imageModal) {
-            closeImage();
+    function loadProjectData(name) {
+        if (!name || !qty_projects[name] || !qty_projects[name].savedInputs) {
+            const textAreas = document.querySelectorAll('.result-area');
+            textAreas.forEach(area => area.innerText = "");
+            // تفريغ خانات أسماء الفقرات
+            const itemTitleInputs = document.querySelectorAll('.section-header-input input');
+            itemTitleInputs.forEach(inp => inp.value = "");
+            return;
         }
-        if (event.target == shareModal) {
-            closeShareModal();
+        let data = qty_projects[name].savedInputs;
+        for (let [id, val] of Object.entries(data)) {
+            const el = document.getElementById(id);
+            if (el) {
+                if (el.type === 'radio' || el.type === 'checkbox') {
+                    el.checked = val;
+                } else {
+                    el.value = val;
+                }
+            }
         }
+        toggleExcavationFillFields();
+        toggleConcreteFields();
+        togglePlasterWhiteThickness();
     }
 
-    // Dark Mode Toggle
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    function toggleAccordion(itemId) {
+        const item = document.getElementById(itemId);
+        const isActive = item.classList.contains('active');
+        const allItems = document.querySelectorAll('.accordion-item');
+        allItems.forEach(el => el.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+        if (currentProjectName) saveProjectData(currentProjectName);
+    }
 
-        const currentTheme = localStorage.getItem("theme");
-        if (currentTheme === "dark") {
-            document.body.classList.add("light-mode");
-        } else if (currentTheme === "light") {
-            document.body.classList.remove("light-mode");
-        } else if (prefersDarkScheme.matches) {
-            document.body.classList.remove("light-mode");
-        } else {
-            document.body.classList.add("light-mode");
-        }
-        
-        function updateDarkModeIcon() {
-            if (document.body.classList.contains("light-mode")) {
-                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+    }
+
+    function openPrintModal() {
+        document.getElementById('printSelectionModal').style.display = 'flex';
+    }
+    function closePrintModal() {
+        document.getElementById('printSelectionModal').style.display = 'none';
+    }
+    function executeSelectedPrint() {
+        const allItems = document.querySelectorAll('.accordion-item');
+        allItems.forEach(el => el.classList.remove('print-active'));
+
+        let selectedAny = false;
+        for (let i = 1; i <= 7; i++) {
+            const chk = document.getElementById(`chk-print-${i}`);
+            if (chk && chk.checked) {
+                const targetId = chk.value;
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.classList.add('print-active');
+                    selectedAny = true;
+                }
             }
         }
-        
-        updateDarkModeIcon();
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle("light-mode");
-            if (document.body.classList.contains("light-mode")) {
-                localStorage.setItem("theme", "dark");
-            } else {
-                localStorage.setItem("theme", "light");
-            }
-            updateDarkModeIcon();
+
+        if (!selectedAny) {
+            alert("الرجاء تحديد تبويب واحد على الأقل للطباعة!");
+            return;
+        }
+
+        closePrintModal();
+        window.print();
+    }
+
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => { toast.classList.remove("show"); }, 3000);
+        if (currentProjectName) saveProjectData(currentProjectName);
+    }
+
+    // 🆕 نظام إدارة وحفظ نتائج الفقرات موضعياً وإدراجها بالتبويب الثامن
+    function saveActiveItemResults(titleInputId, resultAreaId) {
+        const titleValue = document.getElementById(titleInputId).value.trim();
+        const resultText = document.getElementById(resultAreaId).innerText.trim();
+
+        if (!titleValue) {
+            alert("الرجاء إدخال اسم للفقرة قبل عملية الحفظ!");
+            return;
+        }
+        if (!resultText) {
+            alert("لا توجد نتائج محسوبة لحفظها! يرجى الضغط على زر احسب أولاً.");
+            return;
+        }
+
+        if (!qty_projects[currentProjectName].savedCalculatedItems) {
+            qty_projects[currentProjectName].savedCalculatedItems = {};
+        }
+
+        qty_projects[currentProjectName].savedCalculatedItems[titleValue] = resultText;
+        saveProjectsToStorage();
+        updateSavedItemsDropdown();
+        alert(`تم حفظ فقرة "${titleValue}" بنجاح وإضافتها للتبويب الثامن!`);
+    }
+
+    function updateSavedItemsDropdown() {
+        const dropdown = document.getElementById('savedItemsDropdown');
+        if (!dropdown) return;
+        dropdown.innerHTML = "";
+
+        const projectData = qty_projects[currentProjectName];
+        if (!projectData || !projectData.savedCalculatedItems || Object.keys(projectData.savedCalculatedItems).length === 0) {
+            dropdown.innerHTML = '<option value="">-- لا توجد فقرات محفوظة حالياً --</option>';
+            document.getElementById('savedItemsResultDisplay').style.display = "none";
+            return;
+        }
+
+        dropdown.innerHTML = '<option value="">-- اختر فقرة من القائمة لعرض النتائج --</option>';
+        Object.keys(projectData.savedCalculatedItems).forEach(itemKey => {
+            const option = document.createElement('option');
+            option.value = itemKey;
+            option.innerText = itemKey;
+            dropdown.appendChild(option);
         });
+    }
+
+    function loadSavedItemResultToView() {
+        const dropdown = document.getElementById('savedItemsDropdown');
+        const displayArea = document.getElementById('savedItemsResultDisplay');
+        const selectedKey = dropdown.value;
+
+        if (!selectedKey) {
+            displayArea.innerText = "";
+            displayArea.style.display = "none";
+            return;
+        }
+
+        const projectData = qty_projects[currentProjectName];
+        if (projectData && projectData.savedCalculatedItems && projectData.savedCalculatedItems[selectedKey]) {
+            displayArea.innerText = projectData.savedCalculatedItems[selectedKey];
+            displayArea.style.display = "block";
+        }
+    }
+
+    function deleteSelectedSavedItem() {
+        const dropdown = document.getElementById('savedItemsDropdown');
+        const selectedKey = dropdown.value;
+
+        if (!selectedKey) {
+            alert("يرجى اختيار فقرة من القائمة لحذفها أولاً.");
+            return;
+        }
+
+        if (confirm(`هل أنت متأكد من حذف الفقرة المحفوظة "${selectedKey}"؟`)) {
+            delete qty_projects[currentProjectName].savedCalculatedItems[selectedKey];
+            saveProjectsToStorage();
+            updateSavedItemsDropdown();
+            document.getElementById('savedItemsResultDisplay').innerText = "";
+            document.getElementById('savedItemsResultDisplay').style.display = "none";
+        }
+    }
+
+    // 🛡️ الثوابت الرياضية والأسعار الخاصة بك كما هي بدقة متناهية
+    const PRICE_BRICKS_NORMAL_4000 = 650000;         
+    const PRICE_RED_BRICKS_4000 = 1100000;    
+    const PRICE_CONCRETE_PER_M3 = 80000;      
+    const PRICE_CEMENT_BAG = 5000;             
+    const PRICE_PORCELAIN_PER_M2 = 9000;      
+    const PRICE_TILE_PER_M2 = 8000;            
+
+    const BRICK_HEIGHT = 0.08; 
+    const BRICK_LENGTH = 0.24; 
+    const CEMENT_PER_1000_BRICKS = 3.25; 
+    const CEMENT_SPECIFIC_GRAVITY = 1440; 
+
+    function formatNumber(num) {
+        if (Number.isInteger(num)) {
+            return num.toLocaleString('ar-IQ');
+        }
+        return parseFloat(num.toFixed(2)).toLocaleString('ar-IQ');
+    }
+
+    function showAlert(message, type = 'info') {
+        if (type === 'error') {
+            alert("خطأ: " + message);
+        } else {
+            alert(message);
+        }
+    }
+
+    function getInputValue(id, isOptional = false, type = 'float') {
+        const element = document.getElementById(id);
+        if (!element) {
+            if (!isOptional) console.error(`Element with ID ${id} not found.`);
+            return undefined; 
+        }
+        const value = element.value.trim();
+        if (value === '' && isOptional) {
+            return 0; 
+        }
+        if (value === '') {
+            throw new Error(`القيمة مطلوبة لحقل: ${element.previousElementSibling ? element.previousElementSibling.innerText : id}`);
+        }
+        let parsedValue;
+        if (type === 'float') {
+            parsedValue = parseFloat(value);
+        } else if (type === 'int') {
+            parsedValue = parseInt(value, 10);
+        } else if (type === 'text') {
+            return value;
+        }
+
+        if (isNaN(parsedValue) && type !== 'text') {
+            throw new Error(`الرجاء إدخال قيمة رقمية صحيحة لحقل: ${element.previousElementSibling ? element.previousElementSibling.innerText : id}`);
+        }
+        return parsedValue;
+    }
+
+    // =======================================================
+    // 1. عدد العمال اليومي والإنتاجية مالتك
+    // =======================================================
+    function calculateDailyWorkers() {
+        const workTypeSelect = document.getElementById('workType');
+        const workType = workTypeSelect.value;
+        let resultLines = [];
+
+        switch (workType) {
+            case "ألاعمال الترابية":
+                resultLines.push(" A-نوع العمل: حفر الأرض");
+                resultLines.push("1 حفار");
+                resultLines.push("1 جرافة صغيرة");
+                resultLines.push("2 شاحنة");
+                resultLines.push("1 مهندس + 2 عامل");
+                resultLines.push("الإنتاجية التقريبية = 150 م³/يوم");
+                resultLines.push("\nB-نوع العمل: تسوية الأرض ");
+                resultLines.push("1 جريدير");
+                resultLines.push("1 جرافة صغيرة");
+                resultLines.push("2 شاحنة");
+                resultLines.push("1 مهندس + 2 عامل");
+                resultLines.push("الإنتاجية التقريبية = 1500 م²/يوم");
+                resultLines.push("\nC-نوع العمل: دمك الأرض");
+                resultLines.push("1 مدك");
+                resultLines.push("1 جريدير");
+                resultLines.push("1 صهريج مياه");
+                resultLines.push("1 جرافة صغيرة");
+                resultLines.push("الإنتاجية التقريبية = 200 م²/يوم عند سماكة 20 سم + 15% خسارة");
+                resultLines.push("\nD-نوع العمل: ردم بالأحجار الكبيرة");
+                resultLines.push("4 عاملين");
+                resultLines.push("جرافة صغيرة");
+                resultLines.push("الإنتاجية التقريبية = 10 م³/يوم عند سماكة 20 سم + 10% خسارة");
+                resultLines.push("\nE-نوع العمل: ردم بالتربة");
+                resultLines.push("4 عاملين");
+                resultLines.push("جرافة صغيرة");
+                resultLines.push("مدك");
+                resultLines.push("صهريج مياه");
+                resultLines.push("الإنتاجية التقريبية = حسب الكمية والموقع");
+                break;
+            case "بناء الهيكل":
+                resultLines.push("1 خلفة");
+                resultLines.push("1 مساعد");
+                resultLines.push("1 مٌناول الطابوق");
+                resultLines.push("2 عامل أيصال الخبط");
+                resultLines.push("1 خباط");
+                resultLines.push("ألانتاجية التقريبية 1500 طابوقة");
+                break;
+            case "ارضيات":
+                resultLines.push("1 خلفة");
+                resultLines.push("1 مساعد");
+                resultLines.push("2 خباط");
+                resultLines.push("ألانتاجية التقريبية 15 متر مربع ");
+                break;
+            case "سيراميك":
+                resultLines.push("1 خلفة");
+                resultLines.push("1 مساعد");
+                resultLines.push("1 خباط");
+                resultLines.push("ألانتاجية التقريبية 10 متر مربع ");
+                break;
+            case "جص وابياض":
+                resultLines.push("1 خلفة");
+                resultLines.push("1 مساعد");
+                resultLines.push("ألانتاجية التقريبية 20 متر مربع "); 
+                break;
+            default:
+                resultLines.push("نوع البناء غير معروف");
+        }
+        document.getElementById('dailyWorkersResult').innerText = resultLines.join('\n');
+        showToast();
+    }
+
+    // =======================================================
+    // 2. الحفر والردم (السبيس) مالتك
+    // =======================================================
+    function toggleExcavationFillFields() {
+        const calcTypeExcavation = document.getElementById('calcTypeExcavation').checked;
+        const calcTypeFill = document.getElementById('calcTypeFill').checked;
+        const excavationBlock = document.getElementById('excavation-inputs');
+        const fillBlock = document.getElementById('fill-inputs');
+
+        if (calcTypeExcavation) {
+            excavationBlock.style.display = "block";
+            fillBlock.style.display = "none";
+            const fillInputs = fillBlock.querySelectorAll('input');
+            fillInputs.forEach(input => input.value = '');
+        } else if (calcTypeFill) {
+            excavationBlock.style.display = "none";
+            fillBlock.style.display = "block";
+            const excavationInputs = excavationBlock.querySelectorAll('input');
+            excavationInputs.forEach(input => input.value = '');
+        } else { 
+            excavationBlock.style.display = "block";
+            fillBlock.style.display = "block";
+        }
+    }
+
+    function calculateExcavationFill() {
+        const calcTypeExcavation = document.getElementById('calcTypeExcavation').checked;
+        const calcTypeFill = document.getElementById('calcTypeFill').checked;
+        const calcTypeBoth = document.getElementById('calcTypeBoth').checked;
+        let resultLines = [];
+
+        try {
+            if (calcTypeExcavation || calcTypeBoth) {
+                const H1 = getInputValue('H1'); const H2 = getInputValue('H2'); const A1 = getInputValue('A1');
+                const V1 = getInputValue('V1'); const P = getInputValue('P');
+
+                if (H2 <= H1) throw new Error("معدل مناسيب الأرض الطبيعية (H2) يجب أن يكون أكبر من منسوب الأرض المطلوبة (H1).");
+                if (A1 <= 0 || V1 <= 0 || P <= 0) throw new Error("جميع قيم الحفر يجب أن تكون أكبر من صفر.");
+
+                const Y = H2 - H1; const V = Y * A1; const T = Y * A1 * 1.25; const N = T / V1; const totalPriceHfr = N * P;
+
+                resultLines.push("---- الحفر ----");
+                resultLines.push(`عمق الحفر: ${Y.toFixed(2)} م`);
+                resultLines.push(`حجم الحفر: ${V.toFixed(2)} م³`);
+                resultLines.push(`کمية الحفر: ${T.toFixed(2)} م³`);
+                resultLines.push(`عدد السيارات المطلوبة: ${N.toFixed(2)}`);
+                resultLines.push(`السعر الكلي للحفر: ${formatNumber(totalPriceHfr)} د.ع`);
+            }
+
+            if (calcTypeFill || calcTypeBoth) {
+                if (resultLines.length > 0) resultLines.push(''); 
+                const A2 = getInputValue('A2'); const H3 = getInputValue('H3'); const V2 = getInputValue('V2'); const P1 = getInputValue('P1');
+
+                if (A2 <= 0 || H3 <= 0 || V2 <= 0 || P1 <= 0) throw new Error("جميع قيم الردم يجب أن تكون أكبر من صفر.");
+                const H3_m = H3 / 100; 
+
+                resultLines.push("---- الردم (السبيس) ----");
+                if (H3 <= 25) {
+                    const T2 = A2 * (H3_m + 0.02); const N1 = T2 / V2; const priceRdm = N1 * P1;
+                    resultLines.push("ارتفاع الردم أقل من 25 سم ← طبقة واحدة:");
+                    resultLines.push(`كمية الردم: ${T2.toFixed(2)} م³`);
+                    resultLines.push(`عدد السيارات: ${N1.toFixed(2)}`);
+                    resultLines.push(`السعر الكلي للردم: ${formatNumber(priceRdm)} د.ع`);
+                } else {
+                    const H3_half = H3_m / 2; const T2_layer = A2 * (H3_half + 0.02); const N1_layer = T2_layer / V2; const priceLayer = N1_layer * P1;
+                    const totalRdm = T2_layer * 2; const totalTrucks = N1_layer * 2; const totalPrice = priceLayer * 2;
+
+                    resultLines.push("ارتفاع الردم أكبر من 25 سم ← طبقتين:");
+                    resultLines.push(`كمية الردم للطبقة الواحدة: ${T2_layer.toFixed(2)} م³`);
+                    resultLines.push(`عدد السيارات لكل طبقة: ${N1_layer.toFixed(2)}`);
+                    resultLines.push(`السعر لكل طبقة: ${formatNumber(priceLayer)} د.ع`);
+                    resultLines.push(`الكمية الإجمالية: ${totalRdm.toFixed(2)} م³`);
+                    resultLines.push(`عدد السيارات الكلي: ${totalTrucks.toFixed(2)}`);
+                    resultLines.push(`السعر الكلي للردم: ${formatNumber(totalPrice)} د.ع`);
+                }
+            }
+            document.getElementById('excavationFillResult').innerText = resultLines.join('\n');
+            showToast();
+        } catch (e) {
+            showAlert(e.message, "error");
+            document.getElementById('excavationFillResult').innerText = "حدث خطأ في الإدخال.";
+        }
+    }
+
+    function clearExcavationFill() {
+        document.getElementById('H1').value = ''; document.getElementById('H2').value = '';
+        document.getElementById('A1').value = ''; document.getElementById('V1').value = ''; document.getElementById('P').value = '';
+        document.getElementById('A2').value = ''; document.getElementById('H3').value = '';
+        document.getElementById('V2').value = ''; document.getElementById('P1').value = '';
+        document.getElementById('excavationFillResult').innerText = '';
+        document.getElementById('itemTitle-earthworks').value = '';
+    }
+
+    // =======================================================
+    // 3. خرسانة الهيكل الإنشائي مالتك
+    // =======================================================
+    const concreteComponentsData = {
+        "سقف": [
+            { id: "Y1", label: "Y1 (ارتفاع السقف)" }, { id: "L1", label: "L1 (طول السقف)" }, { id: "X1", label: "X1 (عرض السقف)" },
+            { id: "L2", label: "L2 (طول المنور)", optional: true }, { id: "X2", label: "X2 (عرض المنور)", optional: true },
+            { id: "LS", label: "LS (طول فتحة الدرج)", optional: true }, { id: "XS", label: "XS (عرض فتحة الدرج)", optional: true }
+        ],
+        "جسر": [
+            { id: "L3", label: "L3 (طول الجسر)" }, { id: "X3", label: "X3 (عرض الجسر)" }, { id: "Y3", label: "Y3 (ارتفاع الجسر)" }
+        ],
+        "أعمدة": [
+            { id: "L4", label: "L4 (طول العمود)" }, { id: "X4", label: "X4 (عرض العمود)" }, { id: "Y4", label: "Y4 (ارتفاع العمود)" },
+            { id: "n", label: "n (عدد الأعمدة)", type: "int" }
+        ],
+        "درج": [
+            { id: "Y5", label: "Y5 (ارتفاع الطابق مع السقف)" }, { id: "Y6", label: "Y6 (ارتفاع البايه)" },
+            { id: "L6", label: "L6 (طول البايه)" }, { id: "X6", label: "X6 (عرض البايه)" },
+            { id: "N_stairs", label: "N (عدد الاستراحات)", type: "int" },
+            { id: "L7", label: "L7 (طول الاستراحة)", optional: true }, { id: "X7", label: "X7 (عرض الاستراحة)", optional: true }
+        ]
+    };
+
+    const concreteFieldsContainer = document.getElementById('concrete-fields-container');
+    let concreteReportText = ""; 
+
+    function toggleConcreteFields() {
+        concreteFieldsContainer.innerHTML = ''; 
+        const selectedComponents = {
+            roof: document.getElementById('selectRoof').checked,
+            beam: document.getElementById('selectBeam').checked,
+            columns: document.getElementById('selectColumns').checked,
+            stairs: document.getElementById('selectStairs').checked
+        };
+
+        const createInputGroup = (id, labelText, type = 'number') => {
+            const div = document.createElement('div');
+            div.className = 'input-group concrete-input-field';
+            const label = document.createElement('label');
+            label.setAttribute('for', `concrete-${id}`);
+            label.innerText = labelText;
+            div.appendChild(label);
+            const input = document.createElement('input');
+            input.type = type;
+            input.id = `concrete-${id}`;
+            input.step = 'any';
+            div.appendChild(input);
+            return div;
+        };
+
+        if (selectedComponents.roof) {
+            const h3 = document.createElement('h3'); h3.innerText = "بيانات السقف:"; concreteFieldsContainer.appendChild(h3);
+            concreteComponentsData["سقف"].forEach(field => concreteFieldsContainer.appendChild(createInputGroup(field.id, field.label, field.type)));
+        }
+        if (selectedComponents.beam) {
+            const h3 = document.createElement('h3'); h3.innerText = "بيانات الجسر:"; concreteFieldsContainer.appendChild(h3);
+            concreteComponentsData["جسر"].forEach(field => concreteFieldsContainer.appendChild(createInputGroup(field.id, field.label, field.type)));
+        }
+        if (selectedComponents.columns) {
+            const h3 = document.createElement('h3'); h3.innerText = "بيانات الأعمدة:"; concreteFieldsContainer.appendChild(h3);
+            concreteComponentsData["أعمدة"].forEach(field => concreteFieldsContainer.appendChild(createInputGroup(field.id, field.label, field.type)));
+        }
+        if (selectedComponents.stairs) {
+            const h3 = document.createElement('h3'); h3.innerText = "بيانات الدرج:"; concreteFieldsContainer.appendChild(h3);
+            concreteComponentsData["درج"].forEach(field => concreteFieldsContainer.appendChild(createInputGroup(field.id, field.label, field.type)));
+        }
+    }
+
+    function getConcreteSpecificInput(id, isOptional = false, type = 'float') {
+        return getInputValue(`concrete-${id}`, isOptional, type);
+    }
+
+    function calculateConcreteC1C4() {
+        let totalVolume = 0; let resultLines = [];
+        const pricePerM3 = getInputValue('concretePricePerM3');
+        if (pricePerM3 <= 0) { showAlert("الرجاء إدخال سعر المتر المكعب للخرسانة بشكل صحيح.", "error"); return; }
+
+        try {
+            if (document.getElementById('selectRoof').checked) {
+                const Y1 = getConcreteSpecificInput("Y1"); const L1 = getConcreteSpecificInput("L1"); const X1 = getConcreteSpecificInput("X1");
+                const L2 = getConcreteSpecificInput("L2", true); const X2 = getConcreteSpecificInput("X2", true);
+                const LS = getConcreteSpecificInput("LS", true); const XS = getConcreteSpecificInput("XS", true);
+
+                if (Y1 <= 0 || L1 <= 0 || X1 <= 0) throw new Error("قيم السقف يجب أن تكون أكبر من صفر.");
+                const C1_volume = Y1 * L1 * X1;
+                const VM = (L2 && X2) ? L2 * X2 * Y1 : 0; const VS = (LS && XS) ? LS * XS * Y1 : 0;
+                const VT = C1_volume - VM - VS;
+                totalVolume += VT;
+                resultLines.push(`السقف:\n  الحجم: ${VT.toFixed(2)} م³`);
+            }
+
+            if (document.getElementById('selectBeam').checked) {
+                const L3 = getConcreteSpecificInput("L3"); const X3 = getConcreteSpecificInput("X3"); const Y3 = getConcreteSpecificInput("Y3");
+                if (L3 <= 0 || X3 <= 0 || Y3 <= 0) throw new Error("قيم الجسر يجب أن تكون أكبر من صفر.");
+                const C2 = L3 * X3 * Y3;
+                totalVolume += C2;
+                resultLines.push(`الجسر:\n  الحجم: ${C2.toFixed(2)} م³`);
+            }
+
+            if (document.getElementById('selectColumns').checked) {
+                const L4 = getConcreteSpecificInput("L4"); const X4 = getConcreteSpecificInput("X4"); const Y4 = getConcreteSpecificInput("Y4");
+                const n = getConcreteSpecificInput("n", false, 'int');
+                if (L4 <= 0 || X4 <= 0 || Y4 <= 0 || n <= 0) throw new Error("قيم الأعمدة يجب أن تكون أكبر من صفر.");
+                const C3 = L4 * X4 * Y4 * n;
+                totalVolume += C3;
+                resultLines.push(`الأعمدة:\n  الحجم: ${C3.toFixed(2)} م³`);
+            }
+
+            if (document.getElementById('selectStairs').checked) {
+                const Y5 = getConcreteSpecificInput("Y5"); const Y6 = getConcreteSpecificInput("Y6"); const L6 = getConcreteSpecificInput("L6"); const X6 = getConcreteSpecificInput("X6");
+                const N_stairs = getConcreteSpecificInput("N_stairs", false, 'int'); const L7 = getConcreteSpecificInput("L7", true); const X7 = getConcreteSpecificInput("X7", true);
+
+                if (Y5 <= 0 || Y6 <= 0 || L6 <= 0 || X6 <= 0) throw new Error("قيم الدرج غير صحيحة.");
+                const Z_total = Math.floor(Y5 / Y6); const Y6_new = Y5 / Z_total;
+                const V1_steps = Y6_new * L6 * X6 * Z_total; const V1_landings = (L7 && X7) ? L7 * X7 * Y6_new * N_stairs : 0;
+                const V1 = V1_steps + V1_landings; const Z_actual_steps = Z_total - N_stairs;
+                const V2 = Y6_new * X6 * L6 * 0.5 * Z_actual_steps; const C4 = V1 + V2;
+                totalVolume += C4;
+                resultLines.push(`الدرج:\n  الحجم: ${C4.toFixed(2)} م³`);
+            }
+
+            const costConcrete = totalVolume * pricePerM3;
+            resultLines.push(`\nالإجمالي:\n  الحجم: ${totalVolume.toFixed(2)} م³\n  السعر: ${formatNumber(costConcrete)} د.ع`);
+
+            const C = parseFloat(document.getElementById('cementRatio').value) || 1;
+            const S = parseFloat(document.getElementById('sandRatio').value) || 2;
+            const G = parseFloat(document.getElementById('gravelRatio').value) || 4;
+
+            const totalParts = C + S + G;
+            const cementVolume = (totalVolume * C * 0.67) / totalParts;
+            const cementWeight = cementVolume * 1440; const cementBags = cementWeight / 50; 
+            const sandVolume = (totalVolume * S * 0.67) / totalParts; const gravelVolume = (totalVolume * G * 0.67) / totalParts;
+
+            resultLines.push(`\nتقدير المواد (نسبة ${C}:${S}:${G}):`);
+            resultLines.push(`  السمنت: ${cementBags.toFixed(1)} كيس (${cementWeight.toFixed(0)} كغم)`);
+            resultLines.push(`  الرمل: ${sandVolume.toFixed(2)} م³`);
+            resultLines.push(`  الحصى: ${gravelVolume.toFixed(2)} م³`);
+
+            concreteReportText = resultLines.join("\n\n");
+            document.getElementById('concreteC1C4Result').innerText = concreteReportText;
+            document.getElementById('downloadConcreteReportBtn').style.display = 'inline-flex';
+            showToast();
+        } catch (e) {
+            showAlert(e.message, "error");
+            document.getElementById('concreteC1C4Result').innerText = "حدث خطأ في الإدخال.";
+        }
+    }
+
+    function downloadConcreteReport() {
+        if (!concreteReportText) return;
+        const blob = new Blob([concreteReportText], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'تقرير_الخرسانة.txt';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    }
+
+    function clearConcreteC1C4Inputs() {
+        document.getElementById('concrete-fields-container').innerHTML = '';
+        document.getElementById('concreteC1C4Result').innerText = '';
+        document.getElementById('downloadConcreteReportBtn').style.display = 'none';
+        document.getElementById('selectRoof').checked = false;
+        document.getElementById('selectBeam').checked = false;
+        document.getElementById('selectColumns').checked = false;
+        document.getElementById('selectStairs').checked = false;
+        document.getElementById('cementRatio').value = '1';
+        document.getElementById('sandRatio').value = '2';
+        document.getElementById('gravelRatio').value = '4';
+        document.getElementById('itemTitle-concrete').value = '';
+    }
+
+    // =======================================================
+    // 4. خرسانة الأساس مالتك
+    // =======================================================
+    function calculateFoundationC5() {
+        try {
+            const Y = getInputValue('foundationY7'); const X = getInputValue('foundationX8'); const L = getInputValue('foundationL8');
+            const pricePerM3 = getInputValue('foundationPricePerM3');
+            const ratioC = getInputValue('foundationCementRatio'); const ratioS = getInputValue('foundationSandRatio'); const ratioG = getInputValue('foundationGravelRatio');
+
+            if (ratioC <= 0 || ratioS <= 0 || ratioG <= 0) throw new Error("نسبة الخلط غير صحيحة.");
+            if (Y <= 0 || X <= 0 || L <= 0 || pricePerM3 <= 0) throw new Error("تأكد من إدخال القيم الهندسية والسعر بشكل صحيح.");
+
+            const sumRatios = ratioC + ratioS + ratioG; const volume = Y * X * L; const costConcrete = volume * pricePerM3;
+            const K = volume / (0.67 * sumRatios);
+            const C_act_vol = K * ratioC; const S_act_vol = K * ratioS; const G_act_vol = K * ratioG;
+            const C_weight = C_act_vol * CEMENT_SPECIFIC_GRAVITY; const C_bags = Math.ceil(C_weight / 50); const costCementBags = C_bags * PRICE_CEMENT_BAG;    
+
+            let resultLines = [
+                `**حجم الأساس:** ${volume.toFixed(2)} م³`, `**تكلفة الخرسانة (المتر):** ${formatNumber(costConcrete)} د.ع`,
+                `\n--- تقدير المواد (نسبة ${ratioC}:${ratioS}:${ratioG}) ---`,
+                `**الأسمنت (Cement):**`, `  الحجم: ${C_act_vol.toFixed(2)} م³`, `  الأكياس: ${formatNumber(C_bags)} كيس`, `  التكلفة: ${formatNumber(costCementBags)} د.ع`,
+                `**الرمل (Sand):**`, `  الحجم: ${S_act_vol.toFixed(2)} م³`, `**الحصى (Gravel):**`, `  الحجم: ${G_act_vol.toFixed(2)} م³`
+            ];
+            document.getElementById('foundationC5Result').innerText = resultLines.join('\n');
+            showToast();
+        } catch (e) {
+            showAlert(e.message, "error");
+            document.getElementById('foundationC5Result').innerText = "حدث خطأ في الإدخال.";
+        }
+    }
+
+    function clearFoundationC5Inputs() {
+        document.getElementById('foundationCementRatio').value = '1'; document.getElementById('foundationSandRatio').value = '3'; document.getElementById('foundationGravelRatio').value = '6';
+        document.getElementById('foundationY7').value = ''; document.getElementById('foundationX8').value = ''; document.getElementById('foundationL8').value = '';
+        document.getElementById('foundationC5Result').innerText = '';
+        document.getElementById('itemTitle-foundation').value = '';
+    }
+
+    // =======================================================
+    // 5. حساب الكاشي والبورسلين مالتك
+    // =======================================================
+    function calculateTilePorcelain() {
+        try {
+            const totalArea = getInputValue('totalAreaTile'); const tileLength = getInputValue('tileLength'); const tileWidth = getInputValue('tileWidth');
+            const pricePerM2 = getInputValue('pricePerM2Tile'); const tileType = document.getElementById('tileType').value;
+
+            if (totalArea <= 0 || tileLength <= 0 || tileWidth <= 0 || pricePerM2 <= 0) throw new Error("جميع القيم يجب أن تكون أكبر من صفر.");
+            const tileArea = tileLength * tileWidth; const numTiles = totalArea / tileArea; const totalCost = totalArea * pricePerM2;
+
+            document.getElementById('tilePorcelainResult').innerText = 
+                `نوع البلاط: ${tileType}\n` + `السعر لكل متر مربع: ${formatNumber(pricePerM2)} د.ع\n` +
+                `عدد البلاطات المطلوبة: ${Math.ceil(numTiles)} بلاطة\n` + `الكلفة الكلية: ${formatNumber(totalCost)} د.ع`;
+            showToast();
+        } catch (e) {
+            showAlert(e.message, "error");
+            document.getElementById('tilePorcelainResult').innerText = "حدث خطأ في الإدخال.";
+        }
+    }
+
+    function clearTilePorcelainInputs() {
+        document.getElementById('totalAreaTile').value = ''; document.getElementById('tileLength').value = ''; document.getElementById('tileWidth').value = '';
+        document.getElementById('tileType').value = 'كاشي'; document.getElementById('tilePorcelainResult').innerText = ''; updateTilePriceHint();
+        document.getElementById('itemTitle-tiles').value = '';
+    }
+
+    // =======================================================
+    // 6. حساب الطابوق والأسمنت مالتك
+    // =======================================================
+    function calculateBricksCement() {
+        try {
+            const wallLengthWith = getInputValue('wallLengthWith'); const wallLengthWithout = getInputValue('wallLengthWithout'); const wallHeight = getInputValue('wallHeight');
+            const numWindows = getInputValue('numWindows', true, 'int'); const numDoors = getInputValue('numDoors', true, 'int');
+            const betloThickness = getInputValue('betloThickness'); const beamThickness = getInputValue('beamThickness'); const priceBricks4000 = getInputValue('bricksPrice4000');
+            const brickType = document.querySelector('input[name="brickType"]:checked').value;
+
+            if (wallLengthWith < 0 || wallLengthWithout < 0 || wallHeight <= 0 || betloThickness < 0 || beamThickness < 0 || priceBricks4000 <= 0) throw new Error("تأكد من إدخال قيم صحيحة.");
+
+            const netHeight1 = wallHeight - betloThickness - beamThickness; const netHeight2 = (wallLengthWithout > 0) ? (wallHeight - betloThickness) : 0;
+            if (netHeight1 < 0 || netHeight2 < 0) throw new Error("ارتفاع الحائط الصافي لا يمكن أن يكون سالباً.");
+
+            const wallArea1 = wallLengthWith * netHeight1; const wallArea2 = (wallLengthWithout > 0) ? (wallLengthWithout * netHeight2) : 0;
+            const grossWallVolume = (wallArea1 + wallArea2) * 0.24;
+
+            let windowsVolume = 0;
+            for (let i = 0; i < numWindows; i++) windowsVolume += getInputValue(`windowHeight${i}`, true) * getInputValue(`windowWidth${i}`, true) * 0.24;
+            let doorsVolume = 0;
+            for (let i = 0; i < numDoors; i++) doorsVolume += getInputValue(`doorHeight${i}`, true) * getInputValue(`doorWidth${i}`, true) * 0.24;
+
+            const netWallVolume = grossWallVolume - (windowsVolume + doorsVolume); const brickVolume = 0.11 * 0.07 * 0.23; const numBricks = 435 * netWallVolume * 1.05;
+            const mortarVolume = netWallVolume - (numBricks * brickVolume); const C = mortarVolume / (0.87 * 4);
+            const cementWeightKg = C * 1440; let cementBagsRaw = cementWeightKg / 50; let cementBagsInt = Math.floor(cementBagsRaw);
+            let cementBags = (cementBagsRaw - cementBagsInt >= 0.3) ? cementBagsInt + 1 : cementBagsInt;
+
+            const sandVolume = 3 * C; const costBricks = (numBricks / 4000) * priceBricks4000; const costCement = cementBags * PRICE_CEMENT_BAG; const totalCost = costBricks + costCement;
+
+            document.getElementById('bricksCementResult').innerText =
+                `حجم الجدار قبل الطرح = ${grossWallVolume.toFixed(3)} م³\n` + `حجم الشبابيك = ${windowsVolume.toFixed(3)} م³\n` + `حجم الأبواب = ${doorsVolume.toFixed(3)} م³\n` + `الحجم الصافي = ${netWallVolume.toFixed(3)} م³\n\n` +
+                `عدد الطابوق = ${formatNumber(numBricks)} طابوقة\n` + `حجم المونة = ${mortarVolume.toFixed(3)} م³\n` + `قيمة C = ${C.toFixed(4)} م³\n` + `وزن السمنت = ${cementWeightKg.toFixed(1)} كغم\n` +
+                `عدد أكياس السمنت = ${cementBags} كيس\n` + `حجم الرمل = ${sandVolume.toFixed(3)} م³\n\n` + `تكلفة الطابوق (${brickType}) = ${formatNumber(costBricks)} د.ع\n` + `تكلفة السمنت = ${formatNumber(costCement)} د.ع\n` + `التكلفة الكلية = ${formatNumber(totalCost)} د.ع`;
+            showToast();
+        } catch (e) {
+            showAlert(e.message, "error");
+            document.getElementById('bricksCementResult').innerText = "حدث خطأ في الإدخال.";
+        }
+    }
+
+    function clearBricksCementInputs() {
+        document.getElementById('wallLengthWith').value = ''; document.getElementById('wallLengthWithout').value = ''; document.getElementById('wallHeight').value = '';
+        document.getElementById('numWindows').value = 0; document.getElementById('windowFieldsContainer').innerHTML = '';
+        document.getElementById('numDoors').value = 0; document.getElementById('doorFieldsContainer').innerHTML = '';
+        document.getElementById('betloThickness').value = 0; document.getElementById('beamThickness').value = 0;
+        document.getElementById('brickTypeNormal').checked = true; document.getElementById('bricksCementResult').innerText = '';
+        updateBrickPrice(); updateWindowDoorFields('window'); updateWindowDoorFields('door');
+        document.getElementById('itemTitle-bricks').value = '';
+    }
+
+    // =======================================================
+    // 7. حساب الجص والابيض مالتك
+    // =======================================================
+    function calculatePlasterWhite() {
+        try {
+            const roomLength = getInputValue('roomLength'); const roomWidth = getInputValue('roomWidth'); const wallHeightPlaster = getInputValue('wallHeightPlaster');
+            const ceilingLength = getInputValue('ceilingLength'); const ceilingWidth = getInputValue('ceilingWidth');
+            const plasterBagPrice = getInputValue('plasterBagPrice'); const whiteBagPrice = getInputValue('whiteBagPrice'); const materialType = document.querySelector('input[name="materialType"]:checked').value;
+
+            let materialThickness = (materialType === "plaster") ? getInputValue('plasterThickness') : getInputValue('whiteThickness');
+            let bagPrice = (materialType === "plaster") ? plasterBagPrice : whiteBagPrice;
+
+            if (roomLength <= 0 || roomWidth <= 0 || wallHeightPlaster <= 0 || ceilingLength <= 0 || ceilingWidth <= 0 || materialThickness <= 0 || bagPrice <= 0) throw new Error("تأكد من إدخال البيانات بشكل صحيح.");
+
+            let totalWindowArea = 0; plasterWindowEntries.forEach(entry => { if (!isNaN(parseFloat(entry.lengthInput.value)) && !isNaN(parseFloat(entry.widthInput.value))) totalWindowArea += parseFloat(entry.lengthInput.value) * parseFloat(entry.widthInput.value); });
+            let totalDoorArea = 0; plasterDoorEntries.forEach(entry => { if (!isNaN(parseFloat(entry.lengthInput.value)) && !isNaN(parseFloat(entry.widthInput.value))) totalDoorArea += parseFloat(entry.lengthInput.value) * parseFloat(entry.widthInput.value); });
+
+            const wallArea = 2 * (roomLength + roomWidth) * wallHeightPlaster; const netWallArea = wallArea - (totalWindowArea + totalDoorArea); const ceilingArea = ceilingLength * ceilingWidth; const totalArea = netWallArea + ceilingArea;
+            const materialVolume = totalArea * materialThickness;
+            
+            let materialWeight = 0;
+            let numBags = 0;
+
+            if (materialType === "plaster") {
+                const thickness_cm = materialThickness * 100; 
+                materialWeight = 1.05 * totalArea * (25 * (thickness_cm / 1)); 
+                
+                const commercialBagWeight = getInputValue('plasterCommercialBagWeight') || 40; 
+                numBags = materialWeight / commercialBagWeight;
+            } else {
+                const thickness_mm = materialThickness * 1000; 
+                materialWeight = 1.05 * totalArea * (3.5 * (thickness_mm / 1)); 
+                numBags = materialVolume * 100; 
+            }
+
+            const totalCost = numBags * bagPrice;
+
+            document.getElementById('plasterWhiteResult').innerText =
+                `مساحة الجدران الصافية: ${netWallArea.toFixed(2)} م²\n` + `مساحة السقف: ${ceilingArea.toFixed(2)} م²\n` + `المساحة الكلية للمادة: ${totalArea.toFixed(2)} م²\n` + `حجم المادة المطلوب: ${materialVolume.toFixed(3)} م³\n` +
+                `وزن المادة المطلوب الكلي: ${materialWeight.toFixed(2)} كيلوغرام\n` + `عدد الأكياس المطلوبة: ${formatNumber(Math.ceil(numBags))} كيس\n` + `الكلفة الكلية للمادة: ${formatNumber(totalCost)} د.ع`;
+            showToast();
+        } catch (e) {
+            showAlert(e.message, "error");
+            document.getElementById('plasterWhiteResult').innerText = "حدث خطأ في الإدخال.";
+        }
+    }
+
+    function clearPlasterWhiteInputs() {
+        document.getElementById('roomLength').value = ''; document.getElementById('roomWidth').value = ''; document.getElementById('wallHeightPlaster').value = '';
+        document.getElementById('ceilingLength').value = ''; document.getElementById('ceilingWidth').value = '';
+        document.getElementById('plasterWindowFields').innerHTML = ''; document.getElementById('plasterDoorFields').innerHTML = '';
+        plasterWindowEntries = []; plasterDoorEntries = []; document.getElementById('materialTypePlaster').checked = true; togglePlasterWhiteThickness();
+        document.getElementById('plasterWhiteResult').innerHTML = ''; document.getElementById('plasterCommercialBagWeight').value = '40';
+        document.getElementById('itemTitle-plaster').value = '';
+    }
+
+    function updateTilePriceHint() {
+        const tileType = document.getElementById('tileType').value;
+        const hintLabel = document.getElementById('tilePriceHint');
+        if(hintLabel) {
+            if (tileType === "كاشي") { hintLabel.innerText = `السعر التقريبي: ${formatNumber(PRICE_TILE_PER_M2)} د.ع/م²`; document.getElementById('pricePerM2Tile').value = PRICE_TILE_PER_M2; }
+            else if (tileType === "بورسلين") { hintLabel.innerText = `السعر التقريبي: ${formatNumber(PRICE_PORCELAIN_PER_M2)} د.ع/م²`; document.getElementById('pricePerM2Tile').value = PRICE_PORCELAIN_PER_M2; }
+        }
+    }
+    function updateWindowDoorFields(type) {
+        const numElements = type === 'window' ? getInputValue('numWindows', true, 'int') : getInputValue('numDoors', true, 'int');
+        const container = type === 'window' ? document.getElementById('windowFieldsContainer') : document.getElementById('doorFieldsContainer');
+        if(!container) return; container.innerHTML = '';
+        for (let i = 0; i < numElements; i++) {
+            const div = document.createElement('div'); div.className = 'dynamic-field-row';
+            div.innerHTML = `<label>ارتفاع ${i + 1} (م):</label><input type="number" id="${type}Height${i}" step="any" value="0" style="width:70px;" class="${type}-height-input"><label>عرض ${i + 1} (م):</label><input type="number" id="${type}Width${i}" step="any" value="0" style="width:70px;" class="${type}-width-input">`;
+            container.appendChild(div);
+        }
+    }
+    let plasterWindowEntries = []; let plasterDoorEntries = [];
+    function addWindowEntryPlaster() {
+        const container = document.getElementById('plasterWindowFields'); if(!container) return;
+        const div = document.createElement('div'); div.className = 'dynamic-field-row';
+        const lengthInput = document.createElement('input'); lengthInput.type = 'number'; lengthInput.step = 'any'; lengthInput.value = '0'; lengthInput.style.width = '70px';
+        const widthInput = document.createElement('input'); widthInput.type = 'number'; widthInput.step = 'any'; widthInput.value = '0'; widthInput.style.width = '70px';
+        const removeBtn = document.createElement('button'); removeBtn.className = 'add-remove-btn remove-btn'; removeBtn.innerHTML = '&#10006;';
+        removeBtn.onclick = () => { container.removeChild(div); plasterWindowEntries = plasterWindowEntries.filter(entry => entry.lengthInput !== lengthInput); };
+        div.innerHTML = `<label>طول:</label>`; div.appendChild(lengthInput); div.innerHTML += `<label>عرض:</label>`; div.appendChild(widthInput); div.appendChild(removeBtn);
+        container.appendChild(div); plasterWindowEntries.push({ lengthInput, widthInput });
+    }
+    function addDoorEntryPlaster() {
+        const container = document.getElementById('plasterDoorFields'); if(!container) return;
+        const div = document.createElement('div'); div.className = 'dynamic-field-row';
+        const lengthInput = document.createElement('input'); lengthInput.type = 'number'; lengthInput.step = 'any'; lengthInput.value = '0'; lengthInput.style.width = '70px';
+        const widthInput = document.createElement('input'); widthInput.type = 'number'; widthInput.step = 'any'; widthInput.value = '0'; widthInput.style.width = '70px';
+        const removeBtn = document.createElement('button'); removeBtn.className = 'add-remove-btn remove-btn'; removeBtn.innerHTML = '&#10006;';
+        removeBtn.onclick = () => { container.removeChild(div); plasterDoorEntries = plasterDoorEntries.filter(entry => entry.lengthInput !== lengthInput); };
+        div.innerHTML = `<label>طول:</label>`; div.appendChild(lengthInput); div.innerHTML += `<label>عرض:</label>`; div.appendChild(widthInput); div.appendChild(removeBtn);
+        container.appendChild(div); plasterDoorEntries.push({ lengthInput, widthInput });
+    }
+    function togglePlasterWhiteThickness() {
+        const materialType = document.querySelector('input[name="materialType"]:checked').value;
+        document.getElementById('plasterThicknessGroup').style.display = (materialType === "plaster") ? 'grid' : 'none';
+        document.getElementById('whiteThicknessGroup').style.display = (materialType === "white") ? 'block' : 'none';
+    }
+    function updateBrickPrice() {
+        const brickType = document.querySelector('input[name="brickType"]:checked').value;
+        const priceInput = document.getElementById('bricksPrice4000');
+        if(priceInput) priceInput.value = (brickType === "أحمر") ? PRICE_RED_BRICKS_4000 : PRICE_BRICKS_NORMAL_4000;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderDashboard();
+        updateWindowDoorFields('window');
+        updateWindowDoorFields('door');
     });
-
 </script>
-
 </body>
 </html>
